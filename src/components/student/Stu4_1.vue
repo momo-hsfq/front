@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
 <div style="width:1150px">
   <el-table
     :data="infoTableData"
@@ -28,6 +28,8 @@
   </div>
 </template>
 
+
+
 <script>
 export default {
   data() {
@@ -54,6 +56,20 @@ export default {
   },
   created:function(){
     this.getInfoTable()
+  }
+}
+</script> -->
+
+
+<template>
+  <v-person></v-person>
+</template>
+
+<script>
+import person from '../common/Person.vue'
+export default {
+  components:{
+    'v-person':person
   }
 }
 </script>

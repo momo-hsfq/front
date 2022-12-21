@@ -56,7 +56,7 @@
         type="primary"
         style="cursor: pointer"
         @click="toForgot"
-        class="fogotCow"
+        class="forgotCow"
         >忘记密码?</el-link
       >
       <el-link
@@ -72,16 +72,16 @@
 
 <!-- 页面 -->
 <style scoped>
-/* .setting-wrapper {
+.setting-wrapper {
   display: flex;
   flex-direction: row;
 }
 .forgotCow {
-  margin: 0 150px 0 10px;
+  margin: 0 0 0 10px;
 }
 .registerCow {
-  margin: 0 10px 0 120px;
-} */
+  margin: 0 10px 0 100px;
+} 
 </style>
 
 <script>
@@ -144,7 +144,7 @@ export default {
                 console.log(result);
                 setCookie('token', result.data.datas.token, 1);
                 // 跳转到student组件中
-                this.$router.replace({ path: '/Stu1_1' });
+                this.$router.replace({ path: '/Stu4_1' });
               } else if (result.data.code === 2) {
                 this.$message({
                   type: 'success',
@@ -152,8 +152,17 @@ export default {
                 });
                 setCookie('token', result.data.datas.token, 1);
                 // 跳转到teacher组件中
-                this.$router.replace({ path: '/Tea1_1' });
-              } else {
+                this.$router.replace({ path: '/Tea4_1' });
+              } else if (result.data.code === 3) {
+                this.$message({
+                  type: 'success',
+                  message: '登录成功!',
+                });
+                setCookie('token', result.data.datas.token, 1);
+                // 跳转到teacher组件中
+                this.$router.replace({ path: '/Adm1_1' });
+              }
+              else {
                 this.getCaptcha();
                 alert(result.data.msg);
                 return false;

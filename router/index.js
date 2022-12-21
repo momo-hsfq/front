@@ -23,7 +23,7 @@ import AchievementAndAward from'@/components/student/AchievementAndAward'
 import VerifySlide from'@/components/verifition/Verify/VerifySlide'
 import VerifyPoints from'@/components/verifition/Verify/VerifyPoints'
 
-
+import Tea4_4 from '@/components/teacher/Tea4_4'
 import Tea4_3 from '@/components/teacher/Tea4_3'
 import Tea4_2 from '@/components/teacher/Tea4_2'
 import Tea4_1 from '@/components/teacher/Tea4_1'
@@ -39,14 +39,17 @@ import Adm1_3 from '@/components/admin/Adm1_3'
 import Adm2_1 from '@/components/admin/Adm2_1'
 import Adm3_1 from '@/components/admin/Adm3_1'
 import Adm3_2 from '@/components/admin/Adm3_2'
+import Adm3_3 from '@/components/admin/Adm3_3'
 import Adm4 from '@/components/admin/Adm4'
 import Admin from '@/components/admin/Admin.vue'
+
 
 Vue.use(Router)
 
 export default new Router({
   mode: 'history',
   routes: [
+    
     {
       path: '/',
       redirect: '/login'
@@ -73,7 +76,7 @@ export default new Router({
       name: 'forgot',
       component: Forgot
     },
-
+    { path: '/register', component: Register, name: 'register' },
 
     {
       path: '/VerifySlide',
@@ -121,10 +124,7 @@ export default new Router({
             requireAuth: true
           }
         },
-        {path:'/register',
-         name:'register',
-         component:Register
-        },
+       
         {path:'/password_strength',
          name:'password_strength',
          component:password_strength
@@ -259,9 +259,19 @@ export default new Router({
             requireAuth: true
           }
         },
+        {
+          path: '/Tea4_4',
+          component: Tea4_4,
+          meta: {
+            requireAuth: true
+          }
+        },
       ]
 
-    }, {
+    }, 
+    
+    
+    {
       path: '/Admin',
       name: '/Admin',
       component: Admin,
@@ -314,6 +324,13 @@ export default new Router({
           }
         },
         {
+          path: '/Adm3_3',
+          component: Adm3_3,
+          meta: {
+            requireAuth: true
+          }
+        },
+        {
           path: '/Adm4',
           component: Adm4,
           meta: {
@@ -322,6 +339,6 @@ export default new Router({
         }
       ]
 
-    }
+    },
   ]
 });

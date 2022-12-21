@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
 <div style="width:1150px">
   <el-table
     :data="infoTableData"
@@ -80,4 +80,18 @@
       this.getInfoTable()
     }
   }
+</script> -->
+
+
+<template>
+  <v-teacher></v-teacher>
+</template>
+
+<script>
+import teacher from '../common/Teacher.vue'
+export default {
+  components:{
+    'v-teacher':teacher
+  }
+}
 </script>

@@ -135,8 +135,10 @@ export default {
         query: {
           from: 'admin',
         },
+        
       });
     },
+    
   },
 };
 </script>

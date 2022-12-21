@@ -2,48 +2,48 @@
     <div class="changePT" style="height:200">
       <el-form :model="userForm" :rules="rules" ref="userForm" label-width="100px">
       <el-form-item prop="email" label="邮箱地址：">
-          <el-input v-model="userForm.email" > </el-input>
+          <el-input v-model="userForm.tel" > </el-input>
       </el-form-item>
-
+    
       <el-form-item>
         <el-input v-model="userForm.vcode" maxlength="6" placeholder="验证码" style="width: 125px"></el-input> 
         <el-button type="primary" round style="margin-left:10px;width:145px" @click="getCode()" :disabled="getCodeBtnDisable">{{codeBtnWord}}</el-button>
       </el-form-item>
-
+      
       <el-form-item>
         <el-button type="primary" @click="submitForm('userForm')" style="width:300px">确认</el-button>
       </el-form-item>
     </el-form>
     </div>
     </template>
-
+    
     <script>
     import {getCookie} from '../global/cookie'
       export default {
         data() {
-            var validateEmail = (rule, value, callback) => {
+            var validateTel = (rule, value, callback) => {
                 if (value === '') {
-                    callback(new Error('邮箱号不能为空'));
+                    callback(new Error('手机号不能为空'));
                 } else {
                     callback();
                 }
             };
             return {
             userForm: {
-                email:'',
+                tel:'',
                 vcode:''
             },
             rules: {
-                email: [{ validator: validateEmail, trigger: 'blur'}],
+                tel: [{ validator: validateTel, trigger: 'blur'}],
             },
             codeBtnWord:'获取验证码',
             waitTime:61,
           };
         },computed:{
-            // 用于校验邮箱格式是否正确
-            emailAddressStyle(){
-                let reg = /^\w+((-\w+)|(\.\w+))*@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
-                if(!reg.test(this.userForm.email)){
+            // 用于校验手机号码格式是否正确
+            phoneNumberStyle(){
+                let reg = /^1[3456789]\d{9}$/
+                if(!reg.test(this.userForm.tel)){
                     return false
                 }
                 return true
@@ -51,7 +51,7 @@
             getCodeBtnDisable:{
                 get(){
                     if(this.waitTime == 61){
-                        if(this.emailAddressStyle){
+                        if(this.phoneNumberStyle){
                             return false
                         }  
                     }
@@ -65,15 +65,15 @@
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     this.$axios
-                    .post('/pwd/changeEmailAddress', {
-                        email:this.userForm.email,
-                        emailAddress:this.userForm.vcode
+                    .post('/pwd/changePhoneCode', {
+                        telephone:this.userForm.tel,
+                        phoneCode:this.userForm.vcode
                     })
                     .then((result)=> {
                     if (result.data.code === 1) {
                         this.$message({
                             type: 'success',
-                            message: '邮箱号已更换'
+                            message: '手机号已更换'
                         });
                     }else{
                         this.$message({
@@ -93,8 +93,8 @@
           },
           getCode(){
             this.$axios
-            .post('/email/sendChangeEmailAddress', { //获取验证码接口
-                emailAddress:this.userForm.email
+            .post('/phone/sendChangePhoneCode', { //获取验证码接口
+                phoneNumber:this.userForm.tel
             })
             .then((result)=> {
                 if (result.data.code === 1) {

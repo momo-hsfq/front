@@ -9,6 +9,8 @@ import { post, fetch, patch, put } from "./http.js"
 import { getCookie } from './components/global/cookie'
 
 
+
+
 Vue.use(ElementUI)
 // require('./mock.js')
 

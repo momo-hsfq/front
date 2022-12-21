@@ -194,7 +194,7 @@ export default {
         const query = route.query;
         if (query) {
           this.redirect = query.redirect;
-          this.otherQuery = this.getOtherQuery(query);
+          // this.otherQuery = this.getOtherQuery(query);
         }
       },
       immediate: true,
