@@ -6,6 +6,9 @@
         <v-header></v-header>
       </el-header>
       <router-view></router-view>
+      <el-footer>
+        <v-footer></v-footer>
+      </el-footer>
     </el-container>
   </div>
 </template>

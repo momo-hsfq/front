@@ -73,7 +73,7 @@ import termTable from '../global/termTable.js'
       },
       getTermSelected(){
         this.$axios
-        .post('/stuAndTea/getTermTable', { //获取查询学期课表接口
+        .get('/stuAndTea/getTermTable', { //获取查询学期课表接口
             term: this.termSelected
         })
         .then((result)=> {

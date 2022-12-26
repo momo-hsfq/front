@@ -9,13 +9,16 @@
           style="width: 150px"
           size="small"
         >
-          <el-option
+          <!-- <el-option
             v-for="item in deptOptions"
             :key="item.departmentNo"
             :label="item.department"
             :value="item.departmentNo"
           >
-          </el-option>
+          </el-option> -->
+
+          <el-option value="软件学院"></el-option>
+          <el-option value="数学学院"></el-option>
         </el-select>
       </el-col>
       <el-col :span="3">
@@ -46,7 +49,7 @@
         type="primary"
         size="small"
         @click="addStuBtn"
-        icon="el-icon-plus"
+        icon="el-icon-user"
         >添加学生</el-button
       >
       <el-button
@@ -141,15 +144,13 @@
       width="50%"
     >
       <el-form :model="form">
+        
         <el-form-item>
           <el-col :span="10">
             <el-form-item label="学号" :label-width="formLabelWidth">
               <el-input
                 v-model="form.studentNo"
                 autocomplete="off"
-                :disabled="isDisabled"
-                maxlength="12"
-                show-word-limit
               ></el-input>
             </el-form-item>
           </el-col>
@@ -160,6 +161,23 @@
           </el-col>
         </el-form-item>
         <el-form-item>
+          <!-- <el-col :span="3">
+        <el-select
+          v-model="gradeSelected"
+          @change="gradeSelect"
+          placeholder="请选择年级"
+          style="width: 150px"
+          size="small"
+          >
+          <el-option
+           v-for="item in gradeOptions"
+          :key="item.grade"
+          :label="item.label"
+         :value="item.grade"
+          >
+          </el-option>
+        </el-select>
+      </el-col> -->
           <el-col :span="10">
             <el-form-item label="性别" :label-width="formLabelWidth">
               <el-select v-model="form.gender" placeholder="请选择">
@@ -221,20 +239,42 @@
           </el-col>
         </el-form-item>
         <el-form-item>
-          <el-col :span="8">
+          <el-col :span="12">
             <el-form-item label="学院" :label-width="formLabelWidth">
               <el-select v-model="form.department" placeholder="请选择">
-                <el-option
+                <!-- <el-option
                   v-for="item in deptOptions"
                   :key="item.departmentNo"
                   :label="item.department"
                   :value="item.departmentNo"
-                >
-                </el-option>
+                > -->
+                <!-- </el-option> -->
+                <el-option value="软件学院"></el-option>
+                <el-option value="数学学院"></el-option>
+                
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="12">
+            <el-form-item label="年级" :label-width="formLabelWidth">
+        <el-select
+          v-model="gradeSelected"
+          @change="gradeSelect"
+          placeholder="请选择"
+        >
+          <el-option
+            v-for="item in gradeOptions"
+            :key="item.grade"
+            :label="item.label"
+            :value="item.grade"
+          >
+          </el-option>
+        </el-select></el-form-item>
+      
+      </el-col>
+      </el-form-item>
+      <el-form-item>
+          <el-col :span="12">
             <el-form-item label="班级" :label-width="formLabelWidth">
               <el-select v-model="form.class" placeholder="请选择">
                 <el-option
@@ -247,7 +287,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="12">
             <el-form-item label="状态" :label-width="formLabelWidth">
               <el-select v-model="form.status" placeholder="请选择">
                 <el-option value="毕业"></el-option>
@@ -352,6 +392,7 @@ export default {
         politicalAppearence: '',
         phoneNum: '',
         department: '',
+        grade:'',
         class: '',
         status: '',
       },
@@ -439,28 +480,33 @@ export default {
       if (this.gradeSelected == '') {
         return;
       }
+    
       this.getTableData();
     },
     gradeSelect() {
       if (this.deptSelected == '') {
         return;
       }
+      // console.log(this.deptSelected)
       this.getTableData();
     },
     getTableData() {
       if (this.deptSelected == '' || this.gradeSelected == '') {
         return;
       }
+      
       this.$axios
-        .get('/stuAdmin/getStuData', {
-          dpt: this.deptSelected,
-          grade: this.gradeSelected,
+        .post('/stuAdmin/getStuData', {
+           dpt: this.deptSelected,
+           grade: this.gradeSelected,
         })
+        
         .then((result) => {
+          console.log(result);
           if (result.data.code === 1) {
             //返回第一页数据，和
             this.totalCount = result.data.datas.length;
-            this.tableData = result.data.datas;
+            this.tableData = result.data.datas.stuBasicInfo;
           } else {
             alert(result.data.msg);
             return false;
@@ -490,6 +536,7 @@ export default {
     addStuBtn() {
       this.form.studentNo = '';
       this.form.name = '';
+      this.form.grade = '';
       this.form.gender = '';
       this.form.graduateSchool = '';
       this.form.birthDate = '';
@@ -530,16 +577,17 @@ export default {
     },
 
     handleEdit(index, row) {
-      this.form.id = row.id;
+      this.form.studentNo = row.studentNo;
       this.form.name = row.name;
-      this.form.sex = row.sex;
-      this.form.graduate = row.graduate;
-      this.form.birth = row.birth;
-      this.form.idCard = row.idCard;
-      this.form.political = row.political;
-      this.form.telephone = row.telephone;
+      this.form.gender = row.gender;
+      this.form.graduateSchool = row.graduateSchool;
+      this.form.birthDate = row.birthDate;
+      this.form.identityNum = row.identityNum;
+      this.form.politicalAppearence= row.politicalAppearence;
+      this.form.phoneNum = row.phoneNum;
+      this.form.grade = this.gradeSelected;
       this.form.department = this.deptSelected;
-      this.form.classAndGrade = row.classAndGrade;
+      this.form.class = row.class;
       this.form.status = row.status;
       this.visible1 = 'none';
       this.visible2 = 'inline';
@@ -576,12 +624,14 @@ export default {
         cancelButtonText: '取消',
         type: 'warning',
       })
+      // console.log(row.studentNo)
         .then(() => {
           this.$axios
             .post('/stuAdmin/deleteStu', {
-              id: row.id,
+              studentNo: row.studentNo,
             })
             .then((result) => {
+              console.log(result);
               if (result.data.code === 1) {
                 this.getTableData();
                 this.$message({
@@ -615,8 +665,8 @@ export default {
   },
   created() {
     // this.getAllClass();
-    this.gradeSelected = this.gradeOptions[2].grade;
-    this.getDptName();
+    // this.gradeSelected = this.gradeOptions[2].grade;
+    // this.getDptName();
   },
 };
 </script>

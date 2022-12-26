@@ -73,7 +73,7 @@ export default {
     methods: {
     getTermSelected(){
         this.$axios
-        .post('/student/getScoreTable', { //获取查询学生学期成绩接口
+        .get('/student/getScoreTable', { //获取查询学生学期成绩接口
             term: this.termSelected
         })
         .then((result)=> {

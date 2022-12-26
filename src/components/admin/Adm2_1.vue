@@ -150,7 +150,7 @@
   ref="upload"
   multiple="false"
   accept=".xls,.xlsx"
-  action="http://47.93.85.24:8080/adminArrange/arrange/uploadCrsArrange"
+  action="http://localhost:8080/adminArrange/arrange/uploadCrsArrange"
   with-credentials="true" 
   :on-success="handleAvatarSuccess"
   :file-list="fileList"
@@ -256,7 +256,7 @@ import {tryHideFullScreenLoading } from '../../loading.js'
     methods:{
       getDptName(){
         this.$axios
-        .post('/dpt/getDptName', {})
+        .get('/dpt/getDptName', {})
         .then((result)=> {
             if (result.data.code === 1) {//返回第一页数据，和
               this.deptOptions = result.data.datas
@@ -268,9 +268,34 @@ import {tryHideFullScreenLoading } from '../../loading.js'
             alert(error)
         })
       },
+      getTableData(){
+        if(this.deptSelected == ""){
+          return
+        }
+        this.$axios
+        .get('/crsAdmin/getCourseInfo', { 
+          dpt:this.deptSelected
+        })
+        .then((result)=> {
+            if (result.data.code === 1) {//返回第一页数据，和
+              this.totalCount = result.data.datas.length
+              this.tableData = result.data.datas
+            }else{
+              alert(result.data.msg)
+              return false;
+            }
+        })
+        .catch((error)=> {
+            alert(error)
+        })
+      },
       getAreaSelected(){
         this.$axios
-        .post('/spot/getRoomByArea', { 
+        //应该是这样写吗？？？
+        //？
+        //？
+        //？
+        .get('/spot/getRoomByArea', { 
           area:this.areaSelected
         })
         .then((result)=> {
@@ -293,7 +318,7 @@ import {tryHideFullScreenLoading } from '../../loading.js'
         this.tableInfo.term = this.termSelected
         this.tableInfo.grade = this.gradeSelected
         this.$axios
-        .post('/adminArrange/arrange/getCrsArrangeData', {
+        .get('/adminArrange/arrange/getCrsArrangeData', {
           dpt: this.deptSelected,
           grade: this.gradeSelected,
           term: this.termSelected
@@ -323,7 +348,7 @@ import {tryHideFullScreenLoading } from '../../loading.js'
         var total = response.datas.totalNum
         var failed = response.datas.failed
         alert("导入成功，共添加"+total+"条，成功"+success+"条，失败"+failed+"条");
-        this.selectOk()
+        // this.selectOk()
       },
       
       openOrClose(){
@@ -347,6 +372,11 @@ import {tryHideFullScreenLoading } from '../../loading.js'
           })
         }).catch(() => {});
       },
+
+      //这是啥？
+      //?
+      //?
+      //?
       loadButton(){
         this.$axios
         .post('/adminArrange/arrange/loadButton', {})
@@ -380,6 +410,8 @@ import {tryHideFullScreenLoading } from '../../loading.js'
                 type: 'success',
                 message: '删除成功!'
               });
+              this.getTableData();
+
             }
           }).catch((error)=> {
             alert(error)
@@ -409,6 +441,7 @@ import {tryHideFullScreenLoading } from '../../loading.js'
               type: 'success',
               message: '修改成功!'
             });
+            
             var i = this.editIndex
             if(this.form.grade!=this.tableInfo.grade||this.form.term!=this.tableInfo.term){
               this.tableData.splice(i, 1)
@@ -423,6 +456,11 @@ import {tryHideFullScreenLoading } from '../../loading.js'
               this.tableData[i].time = this.form.time
               this.tableData[i].total = this.form.total
             }
+            //应该加吗？
+            //?
+            //?
+            //?
+            this.getTableData();
             this.dialogFormVisible = false
           }else{
             return false
@@ -438,8 +476,9 @@ import {tryHideFullScreenLoading } from '../../loading.js'
       },
   },
   created(){
-    this.getDptName()
-    this.loadButton()
+    this.getDptName();
+    this.loadButton();
+    this.getTableData();
   }
 }
 </script>

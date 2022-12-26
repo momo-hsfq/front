@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div id="loginAdmin" class="login_div">
     <span class="login_span">管理员</span>
     <el-divider></el-divider>
@@ -141,4 +141,4 @@ export default {
     
   },
 };
-</script>
+</script> -->

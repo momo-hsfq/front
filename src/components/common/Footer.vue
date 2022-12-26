@@ -1,6 +1,6 @@
 <template>
   <el-footer>
-    <div id="footer">
+    <div id="footer" >
       <p>{{ copyRight }}</p>
       <!-- <p>{{ mail }}</p> -->
     </div>
@@ -17,9 +17,8 @@ export default {
 };
 </script>
 
-<style>
-#footer {
-  height: 40px;
-  background-color: #a0a0a0;
-}
+<style scoped>
+.footer {
+    height: 20px;
+  }
 </style>

@@ -12,7 +12,7 @@
         <el-button slot="append" icon="el-icon-search" @click="searchOk">搜索</el-button>
     </el-input>
   </el-col>
-     <el-button type="primary" size="small" @click="addTeaBtn" icon="el-icon-plus">添加教师</el-button>
+     <el-button type="primary" size="small" @click="addTeaBtn" icon="el-icon-user">添加教师</el-button>
      <el-button type="primary" plain size="small" @click="dialogUploadVisible = true" icon="el-icon-folder-add">导入教师</el-button>
   </el-row>
 
@@ -166,7 +166,7 @@
       </el-col>
     </el-form-item>
   </el-form>
-  <div slot="footer" class="dialog-footer">
+  <div slot="f" class="dialog-footer">
     <el-button @click="dialogFormVisible = false">取 消</el-button>
     <el-button type="primary" @click="addTeacherData" :style="{display: this.visible1}">提交</el-button>
     <el-button type="primary" @click="editOk" :style="{display: this.visible2}">修改</el-button>
@@ -179,7 +179,7 @@
   ref="upload"
   multiple="false"
   accept=".xls,.xlsx"
-  action="http://47.93.85.24:8080/teaAdmin/upload"
+  action="http://localhost:8080/teaAdmin/upload"
   with-credentials="true" 
   :on-success="handleAvatarSuccess"
   :file-list="fileList"
@@ -262,7 +262,7 @@ import XLSX from 'xlsx'
 
       getDptName(){
         this.$axios
-        .post('/dpt/getDptName', {})
+        .get('/dpt/getDptName', {})
         .then((result)=> {
             if (result.data.code === 1) {//返回第一页数据，和
               this.deptOptions = result.data.datas
@@ -287,7 +287,7 @@ import XLSX from 'xlsx'
           return
         }
         this.$axios
-        .post('/teaAdmin/getTeaData', { 
+        .get('/teaAdmin/getTeaData', { 
           dpt:this.deptSelected
         })
         .then((result)=> {
@@ -321,7 +321,7 @@ import XLSX from 'xlsx'
         this.visible1 = 'inline'
         this.isDisabled=false
       },
-      //添加课程
+      //添加教师
       addTeacherData(){
         if(this.form.workTime[0]==this.form.workTime[1]){
           this.form.workTime=this.form.workTime[0]+"至今"
@@ -336,7 +336,7 @@ import XLSX from 'xlsx'
                 type: 'success',
                 message: '添加成功!'
               });
-              this.getTableData()
+              this.getTableData();
             }else{
               this.$message({
                 type: 'error',
@@ -390,7 +390,7 @@ import XLSX from 'xlsx'
                 type: 'success',
                 message: '修改成功!'
               });
-              this.getTableData()
+              this.getTableData();
             }else{
               this.$message({
                 type: 'error',
@@ -416,7 +416,7 @@ import XLSX from 'xlsx'
           })
           .then((result)=> {
             if (result.data.code === 1) {
-              this.getTableData()
+              this.getTableData();
               this.$message({
                 type: 'success',
                 message: '删除成功!'
@@ -440,12 +440,12 @@ import XLSX from 'xlsx'
     watch: {
       deptSelected: function () {
         this.$nextTick(function () {
-          this.getTableData()
+          this.getTableData();
         })
       }
     },
     created(){
-      this.getDptName()
+      this.getDptName();
     }
   }
 </script>

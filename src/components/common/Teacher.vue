@@ -5,7 +5,7 @@
           <div style="text-align: center; margin: 10px 0">
             <el-upload
                 class="avatar-uploader"
-                action="http://localhost:9090/file/upload"
+                action="http://localhost:8080/file/upload"
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess"
             >

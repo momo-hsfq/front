@@ -72,6 +72,7 @@
   </div>
 </template>
 
+
 <style scoped>
 .forgot_span {
   font-family: Microsoft YaHei;

@@ -108,7 +108,7 @@
   multiple="false"
   show-file-list="false"
   accept=".xls,.xlsx"
-  action="http://47.93.85.24:8080/crsAdmin/upload"
+  action="http://localhost:8080/crsAdmin/upload"
   with-credentials="true" 
   :on-success="handleAvatarSuccess"
   :file-list="fileList"
@@ -184,7 +184,7 @@ import {getCookie} from '../global/cookie'
 
       getDptName(){
         this.$axios
-        .post('/dpt/getDptName', {})
+        .get('/dpt/getDptName', {})
         .then((result)=> {
             if (result.data.code === 1) {//返回第一页数据，和
               this.deptOptions = result.data.datas
@@ -210,7 +210,7 @@ import {getCookie} from '../global/cookie'
           return
         }
         this.$axios
-        .post('/crsAdmin/getCourseInfo', { 
+        .get('/crsAdmin/getCourseInfo', { 
           dpt:this.deptSelected
         })
         .then((result)=> {
@@ -249,7 +249,7 @@ import {getCookie} from '../global/cookie'
                 type: 'success',
                 message: '添加成功!'
               });
-              this.getTableData()
+              this.getTableData();
             }else{
               this.$message({
                 type: 'error',
@@ -285,7 +285,7 @@ import {getCookie} from '../global/cookie'
                 type: 'success',
                 message: '修改成功!'
               });
-              this.getTableData()
+              this.getTableData();
             }else{
               this.$message({
                 type: 'error',
@@ -311,7 +311,7 @@ import {getCookie} from '../global/cookie'
           })
           .then((result)=> {
             if (result.data.code === 1) {
-              this.getTableData()
+              this.getTableData();
               this.$message({
                 type: 'success',
                 message: '删除成功!'
@@ -335,12 +335,12 @@ import {getCookie} from '../global/cookie'
     watch: {
       deptSelected: function () {
         this.$nextTick(function () {
-          this.getTableData()
+          this.getTableData();
         })
       }
     },
     created(){
-      this.getDptName()
+      this.getDptName();
     }
   }
 </script>

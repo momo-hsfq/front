@@ -136,6 +136,7 @@ export default {
               vcode: this.loginForm.vcode,
             })
             .then((result) => {
+             console.log(result);
               if (result.data.code === 1) {
                 this.$message({
                   type: 'success',
@@ -154,12 +155,13 @@ export default {
                 // 跳转到teacher组件中
                 this.$router.replace({ path: '/Tea4_1' });
               } else if (result.data.code === 3) {
+              
                 this.$message({
                   type: 'success',
                   message: '登录成功!',
                 });
                 setCookie('token', result.data.datas.token, 1);
-                // 跳转到teacher组件中
+                // 跳转到admin组件中
                 this.$router.replace({ path: '/Adm1_1' });
               }
               else {

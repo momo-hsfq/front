@@ -18,15 +18,20 @@
     position: relative;
     overflow: hidden;
   }
+  .el-icon-plus{
+    line-height: 50px;
+    position: relative;
+
+  }
   .avatar-uploader .el-upload:hover {
     border-color: #409EFF;
   }
   .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
+    width: 150px;
+    height: 100px;
+    line-height: 150px;
     text-align: center;
   }
   .avatar {
@@ -34,6 +39,10 @@
     height: 178px;
     display: block;
   }
+  .el-icon-plus{
+    margin-top: 50px;
+  }
+  
 </style>
 
 <script>

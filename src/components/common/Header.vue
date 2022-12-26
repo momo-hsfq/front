@@ -52,14 +52,15 @@ export default {
           this.$axios
             .post('/auth/login/logout', {})
             .then((result) => {
-              if (result.data.code === 200) {
+              console.log(result); 
+              if (result.status === 200) {
                 delCookie('token');
                 const r = this.$route.path.substr(0, 4);
-                if (r == '/Stu' || r == '/Tea') {
+                // if (r == '/Stu' || r == '/Tea') {
                   this.$router.replace({ path: '/login' });
-                } else {
-                  this.$router.replace({ path: '/loginAdmin' });
-                }
+                // } else {
+                  // this.$router.replace({ path: '/loginAdmin' });
+                // }
               }
             })
             .catch((error) => {
