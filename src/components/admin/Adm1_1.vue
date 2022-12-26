@@ -138,7 +138,7 @@
     </el-pagination>
 
     <el-dialog
-      title="新增学生档案"
+      title="个人信息"
       :visible.sync="dialogFormVisible"
       :close-on-click-modal="false"
       width="50%"
@@ -258,7 +258,7 @@
           <el-col :span="12">
             <el-form-item label="年级" :label-width="formLabelWidth">
         <el-select
-          v-model="gradeSelected"
+          v-model="form.grade"
           @change="gradeSelect"
           placeholder="请选择"
         >
@@ -667,6 +667,7 @@ export default {
     // this.getAllClass();
     // this.gradeSelected = this.gradeOptions[2].grade;
     // this.getDptName();
+    this.getTableData();
   },
 };
 </script>
