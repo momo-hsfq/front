@@ -149,6 +149,96 @@ export default {
   
     <el-col :span="12">
       <el-card class="box-card2">
+        <div slot="header" class="clearfix">
+                <span style="float: left"><b>学术资料</b></span>
+               
+                  <el-button
+                    type="primary"
+                    icon="el-icon-edit"
+                    size="mini"
+                    @click="handleEdit(scope.$index, scope.row)"
+                    style="float:right"
+                    round
+                  >
+                  
+                  </el-button>
+                  <el-button
+                    type="primary"
+                    icon="el-icon-mouse"
+                    style="float:right"
+                    size="mini"
+                    @click="addStuBtn"
+                    round
+                  >
+                  </el-button>
+              </div>
+              <div class="personal-relation" >
+          <div class="relation-item" >研究方向:  <div style="float: right; padding-right:30px;">{{teacher.direction}}</div></div>
+      </div>
+      <div class="personal-relation">
+        <div class="relation-item" >讲授课程:  <div style="float: right; padding-right:30px;">{{teacher.course}}</div></div> 
+      </div>
+         <div class="personal-relation">
+        <div class="relation-item" >论文著作:  <div style="float: right; padding-right:30px;">{{teacher.book}}</div></div>      
+      </div>
+      <el-dialog
+      title="学术资料"
+      :visible.sync="dialogFormVisible"
+      :close-on-click-modal="false"
+      width="50%"
+    >
+      <el-form :model="form">
+        
+        <el-form-item>
+          <el-col :span="24">
+            <el-form-item label="研究方向" :label-width="formLabelWidth">
+              <el-input
+                v-model="form.direction"
+                autocomplete="off"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+      <el-form-item>
+          
+          <el-col :span="24">
+            <el-form-item label="讲授课程" :label-width="formLabelWidth">
+              <el-input
+                v-model="form.course"
+                autocomplete="off"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+        <el-form-item>
+          <el-col :span="24">
+            <el-form-item label="论文著作" :label-width="formLabelWidth">
+              <el-input
+                v-model="form.book"
+                autocomplete="off"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          
+        </el-form-item>
+        
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="addStudentData"
+          :style="{ display: this.visible1 }"
+          >提交</el-button
+        >
+        <el-button
+          type="primary"
+          @click="editOk"
+          :style="{ display: this.visible2 }"
+          >修改</el-button
+        >
+      </div>
+    </el-dialog>
         
       </el-card>
   
@@ -171,6 +261,15 @@ export default {
   </template>
   
   <style scoped>
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: '';
+  }
+  .clearfix:after {
+    clear: both;
+  }
+
   .box-card1 {
       width: 400px;
       height: 1000px;
@@ -252,7 +351,22 @@ export default {
           department: '',
           title: '',
         },
+        teacher:{
+          direction:'',
+          course:'',
+          book:'',
+        },
+        
+        form:{
+          direction:'',
+          course:'',
+          book:'',
+        },
         content: null,
+        visible2: 'none',
+      visible1: 'inline',
+        dialogFormVisible: false,
+        isDisabled: false,
         editorOption: {}
       }
     },
@@ -260,29 +374,104 @@ export default {
       this.load()
     },
     methods: {
-      load() {
-        const username = this.user.username
-        if (!username) {
-          this.$message.error("当前无法获取用户信息！")
-          return
-        }
-        this.request.get("/user/username/" + username).then(res => {
-          this.form = res.data
-        })
-      },
-      // save() {
-      //   this.request.post("/user", this.form).then(res => {
-      //     if (res.code === '200') {
-      //       this.$message.success("保存成功")
-      //       this.dialogFormVisible = false
-      //       this.load()
-  
-      //       this.$emit('refreshUser')
-      //     } else {
-      //       this.$message.error("保存失败")
-      //     }
+      // load() {
+      //   const username = this.user.username
+      //   if (!username) {
+      //     this.$message.error("当前无法获取用户信息！")
+      //     return
+      //   }
+      //   this.request.get("/user/username/" + username).then(res => {
+      //     this.form = res.data
       //   })
       // },
+      getDataForm() {
+  
+  console.log('enter2')
+  
+  this.$axios
+  .post('/teaBasicInfo/getInfo',{}
+    
+).then((result) => {
+
+  if (result.data.code === 1) {
+    console.log(result);
+    this.teacher = result.data.datas;
+  } else {
+      return false;
+  }
+}).catch((error) => {
+  console.log("enter4");
+      alert(error);
+    });
+
+
+},
+      
+      addStuBtn() {
+      this.form.direction = '';
+      this.form.book = '';
+      this.form.course = '';
+ 
+      this.dialogFormVisible = true;
+      this.visible2 = 'none';
+      this.visible1 = 'inline';
+      this.isDisabled = false;
+    },
+    addStudyData() {
+      this.$axios
+        .post('/', this.form)
+        .then((result) => {
+          console.log(result);
+          if (result.data.code === 1) {
+            //返回第一页数据，和
+            this.$message({
+              type: 'success',
+              message: '修改成功!',
+            });
+          } else {
+            this.$message({
+              type: 'error',
+              message: result.data.msg,
+            });
+          }
+          this.dialogFormVisible = false;
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    },
+    handleEdit(index) {
+      this.form.direction = this.direction;
+      this.form.course = this.course;
+      this.form.book = this.book;
+      this.visible1 = 'none';
+      this.visible2 = 'inline';
+      this.isDisabled = true;
+      this.dialogFormVisible = true;
+    },
+    editOk() {
+      this.$axios
+        .post('', this.form)
+        .then((result) => {
+          if (result.data.code === 1) {
+            //返回第一页数据，和
+            this.$message({
+              type: 'success',
+              message: '修改成功!',
+            });
+            this.getTableData();
+          } else {
+            this.$message({
+              type: 'error',
+              message: result.data.msg,
+            });
+          }
+          this.dialogFormVisible = false;
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    },
       handleAvatarSuccess(res) {
         // res就是文件的路径
         this.form.avatarUrl = res

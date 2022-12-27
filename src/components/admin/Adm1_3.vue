@@ -12,7 +12,7 @@
         <el-button slot="append" icon="el-icon-search" @click="searchOk">搜索</el-button>
     </el-input>
   </el-col>
-     <el-button type="primary" size="small" @click="addCrsBtn" icon="el-icon-plus">添加课程</el-button>
+     <el-button type="primary" size="small" @click="addCrsBtn" icon="el-icon-notebook-1">添加课程</el-button>
      <el-button type="primary" plain size="small" @click="dialogUploadVisible = true" icon="el-icon-folder-add">导入课程</el-button>
   </el-row>
 
