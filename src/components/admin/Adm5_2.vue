@@ -471,6 +471,7 @@
                 type: 'success',
                 message: '修改成功!',
               });
+              this.getTableData();
             } else {
               this.$message({
                 type: 'error',
@@ -543,6 +544,7 @@
                     type: 'success',
                     message: '删除成功!',
                   });
+                  this.getTableData();
                 } else {
                   this.$message({
                     type: 'error',

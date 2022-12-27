@@ -563,6 +563,7 @@ export default {
               type: 'success',
               message: '修改成功!',
             });
+            this.getTableData();
           } else {
             this.$message({
               type: 'error',

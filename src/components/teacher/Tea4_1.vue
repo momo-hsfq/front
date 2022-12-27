@@ -14,11 +14,11 @@
       <el-card class="box-card1">
         <v-upload class="upload"></v-upload>
         <div class="name-role">
-            <span class="sender">TEACHER - {{dataForm.name}}</span>  
+            <span class="sender"><b>TEACHER - {{dataForm.name}}</b></span>  
           </div>
           <div class="registe-info">
             <span class="registe-info">
-              NUMBER - {{dataForm.teacherNo}}
+             <b> NUMBER - {{dataForm.teacherNo}} </b>
             </span>
           </div>
         <el-divider></el-divider>

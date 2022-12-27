@@ -12,11 +12,11 @@
       <el-card class="box-card1">
         <v-upload class="upload"></v-upload>
         <div class="name-role">
-            <span class="sender">STUDENT - {{student.name}}</span>  
+            <span class="sender"><b>STUDENT - {{student.name}}</b></span>  
           </div>
           <div class="registe-info">
             <span class="registe-info">
-              NUMBER - {{student.studentNo}}
+              <b>NUMBER - {{student.studentNo}}</b>
             </span>
           </div>
         <el-divider></el-divider>
@@ -59,12 +59,35 @@
       </el-card>
   
       <el-card class="box-card3">
-        <div>
+        <div slot="header" class="clearfix">
+                <span style="float: left"><b>个人博客</b></span>
+               
+                  <el-button
+                    type="primary"
+                    icon="el-icon-edit"
+                    size="mini"
+                    @click="handleEdit(scope.$index, scope.row)"
+                    style="float:right"
+                    round
+                  >
+                  
+                  </el-button>
+                  <el-button
+                    type="primary"
+                    icon="el-icon-mouse"
+                    style="float:right"
+                    size="mini"
+                    @click="addStuBtn"
+                    round
+                  >
+                  </el-button>
+              </div>
+        <!-- <div>
       <el-card style="height: 400px;">
         <quill-editor v-model="content" ref="myQuillEditor" style="height: 400px;" :options="editorOption">
         </quill-editor>
       </el-card>
-    </div>
+    </div> -->
     
   
       </el-card>
@@ -78,6 +101,15 @@
   </template>
   
   <style scoped>
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: '';
+  }
+  .clearfix:after {
+    clear: both;
+  }
+
   .box-card1 {
       width: 380px;
       height: 1000px;
