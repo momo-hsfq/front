@@ -172,42 +172,10 @@
       getDataForm() {
   
         console.log('enter2')
-        // this.$axios
-        //       .post('/stuBasicInfo/getInfo', {})
-        //       .then((result) => {
-        //         console.log(result);
-        //         if (result.data.code === 1) {
-        //           this.getTableData();
-        //           this.$message({
-        //             type: 'success',
-        //             message: '删除成功!',
-        //           });
-        //         } else {
-        //           this.$message({
-        //             type: 'error',
-        //             message: result.data.msg,
-        //           });
-        //         }
-        //       })
-        //       .catch((error) => {
-        //         alert(error);
-        //       });
-  
-  
-  
-  
         
         this.$axios
         .post('/stuBasicInfo/getInfo',{}
-          // url,
-          // {
-          //     data: this.student
-          // },
-          // {
-          //     headers: {
-          //         Authorization: 'Bearer ' + store.state.jwtToken
-          //     }
-          // }
+          
       ).then((result) => {
   
         if (result.data.code === 1) {

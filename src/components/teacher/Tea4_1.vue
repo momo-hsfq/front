@@ -476,7 +476,20 @@ export default {
         // res就是文件的路径
         this.form.avatarUrl = res
       }
-    }
+    },
+  //   watch: {
+  //   deptSelected: function () {
+  //     this.$nextTick(function () {
+  //       this.getDataForm();
+  //     });
+  //   },
+  // },
+  created() {
+    // this.getAllClass();
+    // this.gradeSelected = this.gradeOptions[2].grade;
+    // this.getDptName();
+    this.getDataForm();
+  },
   }
   </script>
   
