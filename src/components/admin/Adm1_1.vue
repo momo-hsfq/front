@@ -221,7 +221,7 @@
           <el-col :span="10">
             <el-form-item label="政治面貌" :label-width="formLabelWidth">
               <el-select
-                v-model="form.politicalAppearence"
+                v-model="form.politicalAppearance"
                 placeholder="请选择"
               >
                 <el-option value="群众"></el-option>
@@ -389,7 +389,7 @@ export default {
         graduateSchool: '',
         birthDate: '',
         identityNum: '',
-        politicalAppearence: '',
+        politicalAppearance: '',
         phoneNum: '',
         department: '',
         grade:'',
@@ -541,7 +541,7 @@ export default {
       this.form.graduateSchool = '';
       this.form.birthDate = '';
       this.form.identityNum = '';
-      this.form.politicalAppearence = '';
+      this.form.politicalAppearance = '';
       this.form.phoneNum = '';
       this.form.department = '';
       this.form.class = '';
@@ -583,7 +583,7 @@ export default {
       this.form.graduateSchool = row.graduateSchool;
       this.form.birthDate = row.birthDate;
       this.form.identityNum = row.identityNum;
-      this.form.politicalAppearence= row.politicalAppearence;
+      this.form.politicalAppearance= row.politicalAppearance;
       this.form.phoneNum = row.phoneNum;
       this.form.grade = this.gradeSelected;
       this.form.department = this.deptSelected;
