@@ -1,103 +1,7 @@
-<!-- <template>
-<div style="width:1150px">
-  <el-table
-    :data="infoTableData"
-    border
-    style="width: 100%">
-    <el-table-column label="个人信息">
-    <el-table-column
-      prop="id"
-      label="工号"
-      width="100">
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="姓名"
-      width="150">
-    </el-table-column>
-    <el-table-column
-      prop="sex"
-      label="性别"
-      width="100">
-    </el-table-column>
-    <el-table-column
-      prop="tel"
-      label="联系电话"
-      width="150">
-    </el-table-column>
-    <el-table-column
-      prop="pol"
-      label="政治面貌"
-      width="150">
-    </el-table-column>
-    <el-table-column
-      prop="title"
-      label="职称"
-      width="100">
-    </el-table-column>
-    <el-table-column
-      prop="dpt"
-      label="系别"
-      width="150">
-    </el-table-column>
-    <el-table-column
-      prop="degree"
-      label="学历"
-      width="100">
-    </el-table-column>
-    <el-table-column
-      prop="workTime"
-      label="工作时间"
-      width="150">
-    </el-table-column>
-    </el-table-column>
-  </el-table>
-  </div>
-</template>
 
-<script>
-  export default {
-    data() {
-      return {
-        infoTableData:[]
-      }
-    },
-    methods:{
-      getInfoTable(){
-        this.$axios
-        .post('/teacher/getInfoTable', {})
-        .then((result)=> {
-            if (result.data.code === 1) {
-                this.infoTableData = result.data.datas
-            }
-        })
-        .catch((error)=> {
-            alert(error)
-        })
-      }
-    },
-    created(){
-      this.getInfoTable()
-    }
-  }
-</script> -->
-
-
-<!-- <template>
-  <v-teacher></v-teacher>
-</template>
-
-<script>
-import teacher from '../common/Teacher.vue'
-export default {
-  components:{
-    'v-teacher':teacher
-  }
-}
-</script> -->
 
 <template>
-  <div class="home">
+  <div class="home" style="width: 1100px">
   
   <!--gutter表示单个el-card之间的间距  -->
   
@@ -406,6 +310,32 @@ export default {
 
 
 },
+
+
+//获取学术资料信息
+getStudyForm() {
+  
+  console.log('enter2')
+  
+  this.$axios
+  .post('/',{}
+    
+).then((result) => {
+
+  if (result.data.code === 1) {
+    console.log(result);
+    this.form = result.data.datas;
+  } else {
+      return false;
+  }
+}).catch((error) => {
+  console.log("enter4");
+      alert(error);
+    });
+
+
+},
+
       
       addStuBtn() {
       this.form.direction = '';
@@ -489,6 +419,7 @@ export default {
     // this.gradeSelected = this.gradeOptions[2].grade;
     // this.getDptName();
     this.getDataForm();
+    this.getStudyForm();
   },
   }
   </script>

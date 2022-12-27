@@ -45,7 +45,6 @@ import Adm5_1 from '@/components/admin/Adm5_1'
 import Adm5_2 from '@/components/admin/Adm5_2'
 import Adm5_3 from '@/components/admin/Adm5_3'
 import Adm5_4 from '@/components/admin/Adm5_4'
-import Adm5_5 from '@/components/admin/Adm5_5'
 import Admin from '@/components/admin/Admin.vue'
 
 
@@ -369,14 +368,6 @@ export default new Router({
         {
           path: '/Adm5_4',
           component: Adm5_4,
-          meta: {
-            requireAuth: true
-          },
-          
-        },
-        {
-          path: '/Adm5_5',
-          component: Adm5_5,
           meta: {
             requireAuth: true
           },

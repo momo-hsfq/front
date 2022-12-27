@@ -14,13 +14,9 @@ module.exports = [{
       name: '成果奖励',
       componentName: 'Adm5_3'
   },{
-    name: '评价他人',
+    name: '互评管理',
     componentName: 'Adm5_4'
     
-},{
-  name: '所获评价',
-  componentName: 'Adm5_5'
-  
 }
   ]
   }, {

@@ -83,6 +83,8 @@
           </el-table-column>
           <el-table-column prop="stuName" label="姓名" width="120">
           </el-table-column>
+          <el-table-column prop="grade" label="年级" width="120">
+          </el-table-column>
           <el-table-column prop="date" label="日期" width="120">
           </el-table-column>
           <el-table-column prop="title" label="课外活动主题" width="200">
@@ -147,7 +149,7 @@
             </el-col>
           </el-form-item>
           <el-form-item>
-            <el-col :span="12">
+            <el-col :span="10">
               <el-form-item label="学院" :label-width="formLabelWidth">
                 <el-select v-model="form.department" placeholder="请选择">
                   <!-- <el-option
@@ -163,7 +165,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="12">
+            <el-col :span="14">
               <el-form-item label="年级" :label-width="formLabelWidth">
           <el-select
             v-model="form.grade"

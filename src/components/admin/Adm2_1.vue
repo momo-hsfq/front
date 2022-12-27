@@ -32,7 +32,7 @@
       </el-select>
     </el-col>
     <el-col :span="6">
-      <el-button type="primary" plain size="small" @click="selectOk">查询</el-button>
+      <el-button type="primary" plain size="small" @click="selectOk" icon="el-icon-search">查询</el-button>
       <el-button type="primary" plain size="small" @click="dialogUploadVisible = true" icon="el-icon-folder-add">导入课程安排</el-button>
     </el-col>
     <el-col :span="4">

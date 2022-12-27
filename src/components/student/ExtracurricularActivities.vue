@@ -22,12 +22,12 @@
           width="180">
         </el-table-column>
         <el-table-column
-          prop="details"
+          prop="content"
           label="课外活动内容"
           width="180">
         </el-table-column>
         <el-table-column
-          prop="achievement"
+          prop="result"
           label="成果">
         </el-table-column>
         </el-table-column>
@@ -62,11 +62,12 @@
           },
           getSelectEAData(){
             this.$axios
-            .post('/student/getStudentExtracurricularActivitiesData', { //获取查询学生课外活动信息接口
+            .post('/extraCurricular/list/getInfo', { //获取查询学生课外活动信息接口
             })
             .then((result)=> {
               if (result.data.code === 1) {
                   this.selectEAData = result.data.datas
+                  this.totalCount = result.data.datas.length
               }else{
                   this.selectEAData = []
                   alert("未查询到课外活动信息")

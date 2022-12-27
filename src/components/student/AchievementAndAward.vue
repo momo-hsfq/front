@@ -22,7 +22,7 @@
           width="180">
         </el-table-column>
         <el-table-column
-          prop="details"
+          prop="result"
           label="成果奖励内容">
         </el-table-column>
         </el-table-column>
@@ -57,11 +57,12 @@
           },
           getSelectAAData(){
             this.$axios
-            .post('/student/getStudentAchievementAndAwardData', { //获取查询学生成果奖励信息接口
+            .post('/achievement/list/getInfo', { //获取查询学生成果奖励信息接口
             })
             .then((result)=> {
               if (result.data.code === 1) {
                   this.selectAAData = result.data.datas
+                  this.totalCount = result.data.datas.length
               }else{
                   this.selectAAData = []
                   alert("未查询到成果奖励信息")

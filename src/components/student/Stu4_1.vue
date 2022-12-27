@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home" style="width: 1100px">
   
   <!--gutter表示单个el-card之间的间距  -->
   
