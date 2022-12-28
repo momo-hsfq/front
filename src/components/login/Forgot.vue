@@ -6,10 +6,15 @@
       <el-form-item prop="user" label="用户名">
         <el-input v-model="userForm.user"></el-input>
       </el-form-item>
-
-      <el-form-item prop="tel" label="手机号">
+      <el-form-item prop="email" label="邮箱">
+      <el-input
+        v-model="userForm.email"
+        autocomplete="off">
+      </el-input>
+    </el-form-item>
+      <!-- <el-form-item prop="tel" label="手机号">
         <el-input v-model="userForm.tel"> </el-input>
-      </el-form-item>
+      </el-form-item> -->
 
       <!-- <el-form-item>
         <el-col :span="10">
@@ -31,6 +36,14 @@
           >
         </el-col>
       </el-form-item> -->
+      <el-form-item>
+      <el-col :span="10">
+        <el-input v-model="userForm.emailCode" maxlength="6" placeholder="验证码" style="width: 125px"></el-input> 
+      </el-col>
+      <el-col :span="12">
+        <el-button type="primary" round style="margin-left:10px;width:145px" @click="getEmailCode" :disabled="getCodeBtnDisable">{{codeBtnWord}}</el-button>
+      </el-col>
+    </el-form-item>
 
       <el-form-item label="新密码" prop="pass">
         <el-input
@@ -39,6 +52,12 @@
           autocomplete="off"
         ></el-input>
       </el-form-item>
+      <div class="progress-bar_wrap">
+      <password_strength
+        v-model="userForm.pass"
+        style="padding-top: 0px"
+      ></password_strength>
+    </div>
 
       <el-form-item label="确认密码" prop="checkPass">
         <el-input
@@ -49,12 +68,12 @@
       </el-form-item>
     </el-form>
     <!-- 验证密码安全性进度条 -->
-    <div class="progress-bar_wrap">
+    <!-- <div class="progress-bar_wrap">
       <password_strength
         v-model="userForm.pass"
         style="padding-top: 10px"
       ></password_strength>
-    </div>
+    </div> -->
     <div>
       <el-button
         type="primary"
@@ -74,6 +93,7 @@
 
 
 <style scoped>
+
 .forgot_span {
   font-family: Microsoft YaHei;
   color: rgb(69, 137, 148);
@@ -105,38 +125,60 @@
 // import md5 from 'js-md5';
 // 引入密码强度进度条插件
 // 怎么能简写文件路径，同级并列文件
+import {getEmailCode} from "@/axios";
+import { request } from "http";
+  import md5 from "js-md5"
 import password_strength from './password_strength.vue';
 export default {
   data() {
-    let validateUser = (rule, value, callback) => {
+    var validateUser = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('用户名不能为空'));
       } else {
         callback();
       }
     };
-    let validateTel = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('手机号不能为空'));
-      } else {
-        callback();
-      }
-    };
-    let validateVcode = (rule, value, callback) => {
+    var validateEmail = (rule, value, callback) => {
+          if (value === "") {
+            callback(new Error("请输入邮箱"));
+          } else {
+            if(value != ""){
+              if(!this.emailReg.test(value)){
+                callback(new Error("请输入正确的邮箱"));
+                return
+              }
+            }callback();
+          }
+        };
+        var validateEmailCode = (rule, value, callback) => {
+          if (value === "") {
+            callback(new Error("请输入验证码"));
+          } else {
+            callback();
+          }
+        };
+    // let validateTel = (rule, value, callback) => {
+    //   if (value === '') {
+    //     callback(new Error('手机号不能为空'));
+    //   } else {
+    //     callback();
+    //   }
+    // };
+    var validateEmailCode = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('验证码不能为空'));
       } else {
         callback();
       }
     };
-    let validatePass = (rule, value, callback) => {
+    var validatePass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('密码不能为空'));
       } else {
         callback();
       }
     };
-    let validatePass2 = (rule, value, callback) => {
+    var validatePass2 = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请再次输入密码'));
       } else if (value !== this.userForm.pass) {
@@ -148,8 +190,8 @@ export default {
     return {
       userForm: {
         user: '',
-        tel: '',
-        vcode: '',
+        email: '',
+        emailCode: '',
         pass: '',
         password_strength: '',
         checkPass: '',
@@ -158,34 +200,34 @@ export default {
       waitTime: 61,
       rules: {
         user: [{ validator: validateUser, trigger: 'blur' }],
-        tel: [{ validator: validateTel, trigger: 'blur' }],
-        vcode: [{ validator: validateVcode, trigger: 'blur' }],
+        email: [{required: false},{ validator: validateEmail, trigger: "blur" }],
+        emailCode: [{required: false},{ validator: validateEmailCode, trigger: "blur" }],
         pass: [{ validator: validatePass, trigger: 'blur' }],
         checkPass: [{ validator: validatePass2, trigger: 'blur' }],
       },
     };
   },
   computed: {
-    // 用于校验手机号码格式是否正确
-    phoneNumberStyle() {
-      let reg = /^1[3456789]\d{9}$/;
-      if (!reg.test(this.userForm.tel)) {
-        return false;
+    // 用于校验邮箱格式是否正确
+    emailNumberStyle(){
+                let reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/
+                if(!reg.test(this.userForm.email)){
+                    return false
       }
       return true;
     },
-    getCodeBtnDisable: {
-      get() {
-        if (this.waitTime == 61) {
-          if (this.phoneNumberStyle) {
-            return false;
-          }
-        }
-        return true;
+    getCodeBtnDisable:{
+                get(){
+                    if(this.waitTime == 61){
+                        if(this.emailNumberStyle){
+                            return false
+                        }  
+                    }
+                    return true
+                },
+                set(){}
+            }
       },
-      set() {},
-    },
-  },
   components: {
     password_strength: password_strength,
   },
@@ -205,10 +247,10 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.userForm.pass = this.userForm.pass;
-          this.userForm.checkPass = this.userForm.checkPass;
+          this.userForm.pass = md5(this.userForm.pass)
+          this.userForm.checkPass = md5(this.userForm.checkPass)
           this.$axios
-            .post('/auth/login/forgot', this.userForm)
+            .post('/pwd/resetPwd', this.userForm)
             .then((result) => {
               if (result.data.code === 1) {
                 this.$message({
@@ -236,13 +278,12 @@ export default {
       });
     },
 
-    getCode() {
-      this.$axios
-        .post('/phone/sendCode', {
-          //获取验证码接口
-          id: this.userForm.user,
-          phoneNumber: this.userForm.tel,
-        })
+    getEmailCode(){
+          this.$axios
+            .post('/sendEmail', { //获取验证码接口
+                id:this.userForm.user,
+                email:this.userForm.email
+            })
         .then((result) => {
           if (result.data.code === 1) {
             this.$message({

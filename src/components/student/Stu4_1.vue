@@ -61,20 +61,10 @@
       <el-card class="box-card3">
         <div slot="header" class="clearfix">
                 <span style="float: left"><b>个人博客</b></span>
-               
-                  <el-button
-                    type="primary"
-                    icon="el-icon-edit"
-                    size="mini"
-                    @click="handleEdit(scope.$index, scope.row)"
-                    style="float:right"
-                    round
-                  >
                   
-                  </el-button>
                   <el-button
                     type="primary"
-                    icon="el-icon-mouse"
+                    icon="el-icon-user"
                     style="float:right"
                     size="mini"
                     @click="addStuBtn"
@@ -82,12 +72,86 @@
                   >
                   </el-button>
               </div>
-        <!-- <div>
+              <el-dialog
+      title="个人博客"
+      :visible.sync="dialogFormVisible"
+      :close-on-click-modal="false"
+      width="50%"
+    >
+      <el-form :model="form" >
+        
+        <el-form-item >
+            <el-col :span="12">
+              <el-form-item label="日期" :label-width="formLabelWidth">
+                <el-date-picker
+                  v-model="form.date"
+                  type="date"
+                  placeholder="选择日期"
+                  value-format="yyyy-MM-dd"
+                  style="width: 200px"
+                >
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12" >
+                <el-form-item label="主题" :label-width="formLabelWidth"  style="display:flex;justify-content:space-between">
+                <el-input
+                  v-model="form.title"
+                  autocomplete="off"
+                  style="width: 300px"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+          </el-form-item>
+        <el-form-item>
+          <el-col :span="24">
+            <el-form-item label="内容" :label-width="formLabelWidth">
+              <editor @contentData="change(arguments,userDefined)" ref="son"></editor>
+              <!-- <div>
       <el-card style="height: 400px;">
-        <quill-editor v-model="content" ref="myQuillEditor" style="height: 400px;" :options="editorOption">
+        <quill-editor v-model="form.content" ref="myQuillEditor" style="height: 200px;" :options="editorOption">
         </quill-editor>
       </el-card>
     </div> -->
+            </el-form-item>
+          </el-col>
+          
+        </el-form-item>
+        
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="onSubmit"
+          :style="{ display: this.visible1 }"
+          >提交</el-button
+        >
+        <el-button
+          type="primary"
+          @click="editOk"
+          :style="{ display: this.visible2 }"
+          >修改</el-button
+        >
+      </div>
+    </el-dialog> 
+        
+    <div style="background-color: #eff1f2; padding: 5px; border-radius: 2px">
+      <el-table
+        id="tableId"
+        
+      >
+        <el-table-column type="index" label="序号" width="59">
+        </el-table-column>
+        <el-table-column prop="date" label="发布日期" width="110">
+        </el-table-column>
+        <el-table-column prop="title" label="标题" width="150">
+        </el-table-column>
+        <el-table-column prop="content" label="详情" width="300">
+        </el-table-column>
+        
+      </el-table>
+    </div>
     
   
       </el-card>
@@ -169,11 +233,13 @@
     import 'quill/dist/quill.snow.css'
     import 'quill/dist/quill.bubble.css'
   import upload from '../common/Upload.vue'
+  import editor from '../common/editor.vue'
   import { error } from 'console'
   export default {
     components:{
       'v-upload':upload,
-      quillEditor
+      quillEditor,
+      // editor
     },
     data() {
       
@@ -192,14 +258,27 @@
           department: '',
           grade:'',
           class: '',
-          status: '',}
+          status: '',},
+          form:{
+            date:'',
+            title:'',
+            content:'',
+          },
+          tableData: [],
+          dialogFormVisible: false,
+          visible2: 'none',
+      visible1: 'inline',
+      isDisabled: false,
+      editorOption: {}
         
       }
     },
+    
     created() {
       console.log('enter1')
       this.getDataForm()
     },
+
     methods: {
       getDataForm() {
   
@@ -223,6 +302,97 @@
   
   
       },
+      getBlogForm() {
+  
+  console.log('enter2')
+  
+  this.$axios
+  .post('/',{}
+    
+).then((result) => {
+
+  if (result.data.code === 1) {
+    console.log(result);
+    this.form = result.data.datas;
+  } else {
+      return false;
+  }
+}).catch((error) => {
+  console.log("enter4");
+      alert(error);
+    });
+
+
+},
+addStuBtn() {
+      this.form.date = '';
+      this.form.title = '';
+      this.form.content = '';
+ 
+      this.dialogFormVisible = true;
+      this.visible2 = 'none';
+      this.visible1 = 'inline';
+      this.isDisabled = false;
+    },
+    addBlogData() {
+      this.$axios
+        .post('/', this.form)
+        .then((result) => {
+          console.log(result);
+          if (result.data.code === 1) {
+            //返回第一页数据，和
+            this.$message({
+              type: 'success',
+              message: '修改成功!',
+            });
+          } else {
+            this.$message({
+              type: 'error',
+              message: result.data.msg,
+            });
+          }
+          this.dialogFormVisible = false;
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    },
+    handleEdit(index) {
+      this.form.date = this.date;
+      this.form.title = this.title;
+      this.form.content = this.content;
+      this.visible1 = 'none';
+      this.visible2 = 'inline';
+      this.isDisabled = true;
+      this.dialogFormVisible = true;
+    },
+    editOk() {
+      this.$axios
+        .post('', this.form)
+        .then((result) => {
+          if (result.data.code === 1) {
+            //返回第一页数据，和
+            this.$message({
+              type: 'success',
+              message: '修改成功!',
+            });
+            this.getTableData();
+          } else {
+            this.$message({
+              type: 'error',
+              message: result.data.msg,
+            });
+          }
+          this.dialogFormVisible = false;
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    },
+
+
+    //博客部分
+   
       
       // load() {
       //   const username = this.user.username

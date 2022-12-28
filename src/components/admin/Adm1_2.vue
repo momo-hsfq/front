@@ -1,12 +1,17 @@
 <template>
   <div style="width:1100px">
   <el-row type="flex" class="row-bg" justify="space-between" style="margin-bottom:5px">
-    <el-select v-model="deptSelected" @change="deptSelect" placeholder="请选择学院" style="width:150px" size="small">
-        <el-option
-          v-for="item in deptOptions"
-          :key="item.id" :label="item.name" :value="item.id">
-        </el-option>
-      </el-select>
+    <el-select
+          v-model="deptSelected"
+          @change="deptSelect"
+          placeholder="请选择学院"
+          style="width: 150px"
+          size="small"
+        >
+
+          <el-option value="软件学院"></el-option>
+          <el-option value="数学学院"></el-option>
+        </el-select>
   <el-col :span="15">
     <el-input v-model="search" placeholder="请输入搜索内容"  size="small">
         <el-button slot="append" icon="el-icon-search" @click="searchOk">搜索</el-button>
@@ -29,11 +34,13 @@
     :cell-style="{padding:'2px'}">
     <el-table-column type="index" label="序号" width="59">
     </el-table-column>
-    <el-table-column prop="id" label="工号" width="110">
+    <el-table-column prop="teacherNo" label="工号" width="110">
     </el-table-column>
     <el-table-column prop="name" label="姓名" width="150">
     </el-table-column>
-    <el-table-column prop="sex" label="性别" width="50">
+    <el-table-column prop="gender" label="性别" width="50">
+    </el-table-column>
+    <el-table-column prop="birth" label="出生日期" width="150">
     </el-table-column>
     <el-table-column prop="department" label="学院" width="180">
     </el-table-column>
@@ -41,13 +48,18 @@
     </el-table-column>
     <el-table-column prop="idCard" label="身份证号" width="200">
     </el-table-column>
-    <el-table-column prop="workTime" label="工作时间" width="110">
-    </el-table-column>
     <el-table-column prop="political" label="政治面貌" width="120">
     </el-table-column>
     <el-table-column prop="degree" label="学历" width="100">
     </el-table-column>
     <el-table-column prop="telephone" label="电话号码" width="120">
+    </el-table-column>
+    <el-table-column prop="direction" label="研究方向" width="120">
+    </el-table-column>
+
+    <el-table-column prop="teaCourse" label="讲授课程" width="120">
+    </el-table-column>
+    <el-table-column prop="book" label="论文著作" width="120">
     </el-table-column>
     <el-table-column fixed="right" prop="operate" label="操作" width="150">
       <template slot-scope="scope">
@@ -70,12 +82,12 @@
   style="text-align:center">
   </el-pagination>
 
-  <el-dialog title="新增教师档案" :visible.sync="dialogFormVisible" :close-on-click-modal=false width="60%">
+  <el-dialog title="基本信息" :visible.sync="dialogFormVisible" :close-on-click-modal=false width="60%">
   <el-form :model="form">
     <el-form-item>
       <el-col :span="8">
-        <el-form-item label="职工号" :label-width="formLabelWidth">
-          <el-input v-model="form.id" autocomplete="off" :disabled="isDisabled" maxlength="8" show-word-limit></el-input>
+        <el-form-item label="工号" :label-width="formLabelWidth">
+          <el-input v-model="form.teacherNo" autocomplete="off" :disabled="isDisabled" maxlength="9" show-word-limit></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="8">
@@ -85,7 +97,7 @@
       </el-col>
       <el-col :span="8">
         <el-form-item label="性别" :label-width="formLabelWidth">
-          <el-select v-model="form.sex" placeholder="请选择">
+          <el-select v-model="form.gender" placeholder="请选择">
             <el-option value="男"></el-option>
             <el-option value="女"></el-option>
           </el-select>
@@ -95,7 +107,7 @@
     <el-form-item>
       <el-col :span="8">
         <el-form-item label="出生日期" :label-width="formLabelWidth" >
-          <el-date-picker v-model="form.birth" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
+          <el-date-picker v-model="form.birth" type="date" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 200px">
           </el-date-picker>
         </el-form-item>
       </el-col>
@@ -145,28 +157,36 @@
       </el-col>
     </el-form-item>
     <el-form-item>
-      <el-col :span="8">
+      <el-col :span="10">
         <el-form-item label="学院" :label-width="formLabelWidth">
           <el-select v-model="form.department" placeholder="请选择">
-          <el-option
-              v-for="item in deptOptions" :key="item.id" :label="item.name" :value="item.id">
-              </el-option>
-          </el-select>
+           
+           <el-option value="软件学院"></el-option>
+           <el-option value="数学学院"></el-option>
+           
+         </el-select>
         </el-form-item>
       </el-col>
-      <el-col :span="8">
-        <el-form-item label="工作时间" :label-width="formLabelWidth">
-          <el-date-picker value-format="yyyy-MM"
-            v-model="form.workTime" type="monthrange"
-            range-separator="至"
-            start-placeholder="入职"
-            end-placeholder="离职">
-          </el-date-picker>
+      <el-col :span="14">
+        <el-form-item label="研究方向" :label-width="formLabelWidth">
+          <el-input v-model="form.direction" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-col>
+    </el-form-item>
+    <el-form-item>
+      <el-col :span="10">
+        <el-form-item label="讲授课程" :label-width="formLabelWidth">
+          <el-input v-model="form.teaCourse" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-col>
+      <el-col :span="14">
+        <el-form-item label="论文著作" :label-width="formLabelWidth">
+          <el-input v-model="form.book" autocomplete="off"></el-input>
         </el-form-item>
       </el-col>
     </el-form-item>
   </el-form>
-  <div slot="f" class="dialog-footer">
+  <div slot="footer" class="dialog-footer">
     <el-button @click="dialogFormVisible = false">取 消</el-button>
     <el-button type="primary" @click="addTeacherData" :style="{display: this.visible1}">提交</el-button>
     <el-button type="primary" @click="editOk" :style="{display: this.visible2}">修改</el-button>
@@ -212,17 +232,19 @@ import XLSX from 'xlsx'
 
         dialogFormVisible: false,
         form: {
-          id: '',
+          teacherNo: '',
           name: '',
-          sex:'',
+          gender:'',
           birth: '',
           degree: '',
           idCard: '',
           telephone: '',
           political: '',
-          workTime: '',
           department: '',
           title: '',
+          direction:'',
+          book:'',
+          teaCourse:'',
         },
         formLabelWidth: '80px',
         visible2:'none',
@@ -287,13 +309,13 @@ import XLSX from 'xlsx'
           return
         }
         this.$axios
-        .get('/teaAdmin/getTeaData', { 
+        .post('/teaBasicInfo/getInfoTable', { 
           dpt:this.deptSelected
         })
         .then((result)=> {
             if (result.data.code === 1) {//返回第一页数据，和
               this.totalCount = result.data.datas.length
-              this.tableData = result.data.datas
+              this.tableData = result.data.datas.teaBasicInfo
             }else{
               alert(result.data.msg)
               return false;
@@ -305,17 +327,19 @@ import XLSX from 'xlsx'
       },
 
       addTeaBtn(){
-        this.form.id = ""
+        this.form.teacherNo = ""
         this.form.name = ""
-        this.form.sex = ""
+        this.form.gender = ""
         this.form.birth = ""
         this.form.degree = ""
         this.form.idCard = ""
         this.form.telephone = ""
         this.form.political = ""
-        this.form.workTime = ""
         this.form.department = ""
         this.form.title = ""
+        this.form.direction=""
+        this.form.teaCourse=""
+        this.form.book=""
         this.dialogFormVisible = true 
         this.visible2 = 'none'
         this.visible1 = 'inline'
@@ -323,13 +347,13 @@ import XLSX from 'xlsx'
       },
       //添加教师
       addTeacherData(){
-        if(this.form.workTime[0]==this.form.workTime[1]){
-          this.form.workTime=this.form.workTime[0]+"至今"
-        }else{
-          this.form.workTime=this.form.workTime[0]+"至"+this.form.workTime[1]
-        }
+        // if(this.form.workTime[0]==this.form.workTime[1]){
+        //   this.form.workTime=this.form.workTime[0]+"至今"
+        // }else{
+        //   this.form.workTime=this.form.workTime[0]+"至"+this.form.workTime[1]
+        // }
         this.$axios
-        .post('/teaAdmin/addTeacher', this.form)
+        .post('/teaBasicInfo/add', this.form)
         .then((result)=> {
             if (result.data.code === 1) {
               this.$message({
@@ -351,39 +375,41 @@ import XLSX from 'xlsx'
       },
 
       handleEdit(index,row){
-        var wkt = []
-        let len = row.workTime.length
-        if(len==9){
-          wkt[0] = row.workTime.substr(0,7)
-          wkt[1] = wkt[0]
-        }else{
-          wkt[0] = row.workTime.substr(0,7)
-          wkt[1] = row.workTime.substr(len-7,len-1)
-        }
-          this.form.id = row.id
+        // var wkt = []
+        // let len = row.workTime.length
+        // if(len==9){
+        //   wkt[0] = row.workTime.substr(0,7)
+        //   wkt[1] = wkt[0]
+        // }else{
+        //   wkt[0] = row.workTime.substr(0,7)
+        //   wkt[1] = row.workTime.substr(len-7,len-1)
+        // }
+          this.form.teacherNo = row.id
           this.form.name = row.name
-          this.form.sex = row.sex
+          this.form.gender = row.sex
           this.form.birth = row.birth
           this.form.degree = row.degree
           this.form.idCard = row.idCard
           this.form.telephone = row.telephone
           this.form.political = row.political
-          this.form.workTime = wkt
           this.form.department = this.deptSelected
           this.form.title = row.title
+          this.form.direction = row.direction
+          this.form.teaCourse = row.teaCourse
+          this.form.book = row.book
           this.visible1 = 'none'
           this.visible2 = 'inline'
           this.isDisabled=true
           this.dialogFormVisible = true
       },
       editOk(){
-        if(this.form.workTime[0]==this.form.workTime[1]){
-          this.form.workTime=this.form.workTime[0]+"至今"
-        }else{
-          this.form.workTime=this.form.workTime[0]+"至"+this.form.workTime[1]
-        }
+        // if(this.form.workTime[0]==this.form.workTime[1]){
+        //   this.form.workTime=this.form.workTime[0]+"至今"
+        // }else{
+        //   this.form.workTime=this.form.workTime[0]+"至"+this.form.workTime[1]
+        // }
         this.$axios
-        .post('/teaAdmin/editTea', this.form)
+        .post('/teaBasicInfo/update', this.form)
         .then((result)=> {
             if (result.data.code == 1) {//返回第一页数据，和
               this.$message({
@@ -411,7 +437,7 @@ import XLSX from 'xlsx'
           type: 'warning'
         }).then(() => {
           this.$axios
-          .post('/teaAdmin/deleteTea', {
+          .post('/teaBasicInfo/delete', {
             id:row.id
           })
           .then((result)=> {
@@ -445,7 +471,7 @@ import XLSX from 'xlsx'
       }
     },
     created(){
-      this.getDptName();
+      this.getTableData();
     }
   }
 </script>

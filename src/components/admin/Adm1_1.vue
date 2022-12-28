@@ -9,13 +9,6 @@
           style="width: 150px"
           size="small"
         >
-          <!-- <el-option
-            v-for="item in deptOptions"
-            :key="item.departmentNo"
-            :label="item.department"
-            :value="item.departmentNo"
-          >
-          </el-option> -->
 
           <el-option value="软件学院"></el-option>
           <el-option value="数学学院"></el-option>
@@ -242,13 +235,7 @@
           <el-col :span="12">
             <el-form-item label="学院" :label-width="formLabelWidth">
               <el-select v-model="form.department" placeholder="请选择">
-                <!-- <el-option
-                  v-for="item in deptOptions"
-                  :key="item.departmentNo"
-                  :label="item.department"
-                  :value="item.departmentNo"
-                > -->
-                <!-- </el-option> -->
+           
                 <el-option value="软件学院"></el-option>
                 <el-option value="数学学院"></el-option>
                 
@@ -496,7 +483,7 @@ export default {
       }
       
       this.$axios
-        .post('/stuAdmin/getStuData', {
+        .post('/stuBasicInfo/getInfoTable', {
            dpt: this.deptSelected,
            grade: this.gradeSelected,
         })
@@ -554,7 +541,7 @@ export default {
 
     addStudentData() {
       this.$axios
-        .post('/stuAdmin/insertStudent', this.form)
+        .post('/stuBasicInfo/add', this.form)
         .then((result) => {
           console.log(result);
           if (result.data.code === 1) {
@@ -597,7 +584,7 @@ export default {
     },
     editOk() {
       this.$axios
-        .post('/stuAdmin/editStu', this.form)
+        .post('/stuBasicInfo/update', this.form)
         .then((result) => {
           if (result.data.code === 1) {
             //返回第一页数据，和
@@ -628,17 +615,17 @@ export default {
       // console.log(row.studentNo)
         .then(() => {
           this.$axios
-            .post('/stuAdmin/deleteStu', {
+            .post('/stuBasicInfo/delete', {
               studentNo: row.studentNo,
             })
             .then((result) => {
               console.log(result);
               if (result.data.code === 1) {
-                this.getTableData();
                 this.$message({
                   type: 'success',
                   message: '删除成功!',
                 });
+                this.getTableData();
               } else {
                 this.$message({
                   type: 'error',

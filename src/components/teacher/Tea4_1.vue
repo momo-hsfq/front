@@ -43,9 +43,6 @@
       <div class="personal-relation" >
           <div class="relation-item" >学院:  <div style="float: right; padding-right:30px;">{{dataForm.department}}</div></div>
       </div>
-      <div class="personal-relation">
-        <div class="relation-item" >工作时间:  <div style="float: right; padding-right:30px;">{{dataForm.workTime}}</div></div> 
-      </div>
   
       </el-card>
       
@@ -80,7 +77,7 @@
           <div class="relation-item" >研究方向:  <div style="float: right; padding-right:30px;">{{teacher.direction}}</div></div>
       </div>
       <div class="personal-relation">
-        <div class="relation-item" >讲授课程:  <div style="float: right; padding-right:30px;">{{teacher.course}}</div></div> 
+        <div class="relation-item" >讲授课程:  <div style="float: right; padding-right:30px;">{{teacher.teaCourse}}</div></div> 
       </div>
          <div class="personal-relation">
         <div class="relation-item" >论文著作:  <div style="float: right; padding-right:30px;">{{teacher.book}}</div></div>      
@@ -108,7 +105,7 @@
           <el-col :span="24">
             <el-form-item label="讲授课程" :label-width="formLabelWidth">
               <el-input
-                v-model="form.course"
+                v-model="form.teaCourse"
                 autocomplete="off"
               ></el-input>
             </el-form-item>
@@ -251,19 +248,18 @@
           idCard: '',
           telephone: '',
           political: '',
-          workTime: '',
           department: '',
           title: '',
         },
         teacher:{
           direction:'',
-          course:'',
+          teaCourse:'',
           book:'',
         },
         
         form:{
           direction:'',
-          course:'',
+          teaCourse:'',
           book:'',
         },
         content: null,
@@ -299,7 +295,7 @@
 
   if (result.data.code === 1) {
     console.log(result);
-    this.teacher = result.data.datas;
+    this.dataForm = result.data.datas;
   } else {
       return false;
   }
@@ -318,13 +314,13 @@ getStudyForm() {
   console.log('enter2')
   
   this.$axios
-  .post('/',{}
+  .post('/teaBasicInfo/getInfo',{}
     
 ).then((result) => {
 
   if (result.data.code === 1) {
     console.log(result);
-    this.form = result.data.datas;
+    this.teacher = result.data.datas;
   } else {
       return false;
   }
@@ -337,71 +333,71 @@ getStudyForm() {
 },
 
       
-      addStuBtn() {
-      this.form.direction = '';
-      this.form.book = '';
-      this.form.course = '';
+    //   addStuBtn() {
+    //   this.form.direction = '';
+    //   this.form.book = '';
+    //   this.form.course = '';
  
-      this.dialogFormVisible = true;
-      this.visible2 = 'none';
-      this.visible1 = 'inline';
-      this.isDisabled = false;
-    },
-    addStudyData() {
-      this.$axios
-        .post('/', this.form)
-        .then((result) => {
-          console.log(result);
-          if (result.data.code === 1) {
-            //返回第一页数据，和
-            this.$message({
-              type: 'success',
-              message: '修改成功!',
-            });
-          } else {
-            this.$message({
-              type: 'error',
-              message: result.data.msg,
-            });
-          }
-          this.dialogFormVisible = false;
-        })
-        .catch((error) => {
-          alert(error);
-        });
-    },
-    handleEdit(index) {
-      this.form.direction = this.direction;
-      this.form.course = this.course;
-      this.form.book = this.book;
-      this.visible1 = 'none';
-      this.visible2 = 'inline';
-      this.isDisabled = true;
-      this.dialogFormVisible = true;
-    },
-    editOk() {
-      this.$axios
-        .post('', this.form)
-        .then((result) => {
-          if (result.data.code === 1) {
-            //返回第一页数据，和
-            this.$message({
-              type: 'success',
-              message: '修改成功!',
-            });
-            this.getTableData();
-          } else {
-            this.$message({
-              type: 'error',
-              message: result.data.msg,
-            });
-          }
-          this.dialogFormVisible = false;
-        })
-        .catch((error) => {
-          alert(error);
-        });
-    },
+    //   this.dialogFormVisible = true;
+    //   this.visible2 = 'none';
+    //   this.visible1 = 'inline';
+    //   this.isDisabled = false;
+    // },
+    // addStudyData() {
+    //   this.$axios
+    //     .post('/', this.form)
+    //     .then((result) => {
+    //       console.log(result);
+    //       if (result.data.code === 1) {
+    //         //返回第一页数据，和
+    //         this.$message({
+    //           type: 'success',
+    //           message: '修改成功!',
+    //         });
+    //       } else {
+    //         this.$message({
+    //           type: 'error',
+    //           message: result.data.msg,
+    //         });
+    //       }
+    //       this.dialogFormVisible = false;
+    //     })
+    //     .catch((error) => {
+    //       alert(error);
+    //     });
+    // },
+    // handleEdit(index) {
+    //   this.form.direction = this.direction;
+    //   this.form.course = this.course;
+    //   this.form.book = this.book;
+    //   this.visible1 = 'none';
+    //   this.visible2 = 'inline';
+    //   this.isDisabled = true;
+    //   this.dialogFormVisible = true;
+    // },
+    // editOk() {
+    //   this.$axios
+    //     .post('', this.form)
+    //     .then((result) => {
+    //       if (result.data.code === 1) {
+    //         //返回第一页数据，和
+    //         this.$message({
+    //           type: 'success',
+    //           message: '修改成功!',
+    //         });
+    //         this.getTableData();
+    //       } else {
+    //         this.$message({
+    //           type: 'error',
+    //           message: result.data.msg,
+    //         });
+    //       }
+    //       this.dialogFormVisible = false;
+    //     })
+    //     .catch((error) => {
+    //       alert(error);
+    //     });
+    // },
       handleAvatarSuccess(res) {
         // res就是文件的路径
         this.form.avatarUrl = res

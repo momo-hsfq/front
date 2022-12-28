@@ -25,6 +25,9 @@ module.exports = [{
     sub: [{
       name: '基本信息',
       componentName: 'Adm1_2'
+    },{
+      name: '学术信息',
+      componentName: 'Adm2_2'
     }]
   }, {
     name: '课程档案',
