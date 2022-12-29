@@ -37,7 +37,6 @@ import Adm1_1 from '@/components/admin/Adm1_1'
 import Adm1_2 from '@/components/admin/Adm1_2'
 import Adm1_3 from '@/components/admin/Adm1_3'
 import Adm2_1 from '@/components/admin/Adm2_1'
-import Adm2_2 from '@/components/admin/Adm2_2'
 import Adm3_1 from '@/components/admin/Adm3_1'
 import Adm3_2 from '@/components/admin/Adm3_2'
 import Adm3_3 from '@/components/admin/Adm3_3'
@@ -315,13 +314,7 @@ export default new Router({
             requireAuth: true
           }
         },
-        {
-          path: '/Adm2_2',
-          component: Adm2_2,
-          meta: {
-            requireAuth: true
-          }
-        },
+       
         {
           path: '/Adm3_1',
           component: Adm3_1,

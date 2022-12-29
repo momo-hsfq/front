@@ -3,7 +3,7 @@
       <div class="PeerAssessment" style="height:250">
         <div style="margin-bottom: 20px">
             <label>&nbsp;&nbsp;选择同学：</label>
-            <el-select v-model="stuSelected" placeholder="请选择你要评价的同学" @change="getStuSelected">
+            <el-select v-model="stuSelected" placeholder="请选择你要评价的同学" @change="stuSelect">
             <el-option
             v-for="item in options"
             :key="item.name"
@@ -73,7 +73,7 @@
       export default {
         data() {
           return {
-            options:stuOptions,
+            options:[],
             stuSelected: '',
             dynamicTags: [],
             inputVisible: false,
@@ -89,6 +89,21 @@
           }
         },
         methods: {
+          getStuName() {
+      this.$axios
+        .get('/evaluate/listClass', {})
+        .then((result) => {
+          if (result.data.code === 1) {
+            console.log(result);
+            this.stuOptions = result.data.datas;
+          } else {
+            return false;
+          }
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    },
           
           handleClose(tag) {
             this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);

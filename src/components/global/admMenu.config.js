@@ -25,9 +25,6 @@ module.exports = [{
     sub: [{
       name: '基本信息',
       componentName: 'Adm1_2'
-    },{
-      name: '学术信息',
-      componentName: 'Adm2_2'
     }]
   }, {
     name: '课程档案',
@@ -41,7 +38,7 @@ module.exports = [{
     }]
   }
   ,{
-    name: '个人账号',
+    name: '个人中心',
     id: '4',
     sub: [{
       name: '修改密码',

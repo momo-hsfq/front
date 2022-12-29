@@ -1,20 +1,50 @@
 <template>
   <div style="width:1100px" class="shadow">
   <el-row type="flex" class="row-bg" justify="space-between" style="margin-bottom:5px">
-    <el-select v-model="deptSelected" @change="deptSelect" placeholder="请选择学院" style="width:150px" size="small">
+    <el-col :span="4">
+      <el-select
+          v-model="deptSelected"
+          @change="deptSelect"
+          placeholder="请选择学院"
+          style="width: 150px"
+          size="small"
+        >
+
+          <el-option value="软件学院"></el-option>
+          <el-option value="数学学院"></el-option>
+        </el-select>
+    </el-col>
+      <el-col :span="4">
+        <el-select v-model="gradeSelected" placeholder="请选择年级" style="width:150px" size="small">
+            <el-option
+            v-for="item in gradeOptions"
+            :key="item.grade"
+            :label="item.label"
+            :value="item.grade">
+            </el-option>
+        </el-select>
+    </el-col>
+    <el-col :span="4">
+      <el-select v-model="termSelected" placeholder="请选择学年" style="width:150px" size="small">
         <el-option
-          v-for="item in deptOptions"
-          :key="item.id" :label="item.name" :value="item.id">
+          v-for="item in termOptions"
+          :key="item.term"
+          :label="item.label"
+          :value="item.term">
         </el-option>
       </el-select>
-  <el-col :span="15">
+    </el-col>
+  <el-col :span="8">
     <el-input v-model="search" placeholder="请输入搜索内容"  size="small">
         <el-button slot="append" icon="el-icon-search" @click="searchOk">搜索</el-button>
     </el-input>
   </el-col>
+  <el-col :span="8">
      <el-button type="primary" size="small" @click="addCrsBtn" icon="el-icon-notebook-1">添加课程</el-button>
      <el-button type="primary" plain size="small" @click="dialogUploadVisible = true" icon="el-icon-folder-add">导入课程</el-button>
-  </el-row>
+     <el-button type="danger" size="small"  :style="{display: this.visible}" @click="openOrClose">{{this.isOpen==true?"结束选课":"开启选课"}}</el-button>
+  </el-col>
+</el-row>
 
   <div style="background-color:#eff1f2;padding:5px;border-radius: 2px;">
   <el-table
@@ -29,7 +59,7 @@
     :cell-style="{padding:'2px'}">
     <el-table-column type="index" label="序号" width="59">
     </el-table-column>
-    <el-table-column prop="id" label="课程编号" width="150">
+    <el-table-column prop="courseNo" label="课程编号" width="150">
     </el-table-column>
     <el-table-column prop="name" label="课程名称" width="180">
     </el-table-column>
@@ -37,9 +67,21 @@
     </el-table-column>
     <el-table-column prop="department" label="开设学院" width="200">
     </el-table-column>
+    <el-table-column prop="grade" label="开设年级" width="200">
+    </el-table-column>
     <el-table-column prop="hours" label="学时" width="100">
     </el-table-column>
     <el-table-column prop="credit" label="学分" width="100">
+    </el-table-column>
+    <el-table-column prop="teacherName" label="任课教师" width="130">
+    </el-table-column>
+    <el-table-column prop="area,room" label="地点" width="100">
+      <template slot-scope="scope"> {{scope.row.area}}{{scope.row.room}} </template>
+    </el-table-column>
+    <el-table-column prop="week,time" label="时间" width="100">
+      <template slot-scope="scope"> {{scope.row.week}}{{scope.row.time}} </template>
+    </el-table-column>
+    <el-table-column prop="total" label="人数" width="50">
     </el-table-column>
     <el-table-column prop="operate" label="操作" width="150">
       <template slot-scope="scope">
@@ -62,36 +104,102 @@
   style="text-align:center">
   </el-pagination>
 
-  <el-dialog title="新开设课程" :visible.sync="dialogFormVisible" :close-on-click-modal="false" width="30%">
+  <el-dialog title="课程开设" :visible.sync="dialogFormVisible" :close-on-click-modal="false" width="50%">
   <el-form :model="form">
+    <el-form-item>
+      <el-col :span="8">
+    <el-form-item label="课程编号" :label-width="formLabelWidth">
+      <el-input v-model="form.courseNo" autocomplete="off"></el-input>
+    </el-form-item>
+    </el-col>
+    <el-col :span="8">
     <el-form-item label="课程名称" :label-width="formLabelWidth">
       <el-input v-model="form.name" autocomplete="off"></el-input>
-    </el-form-item>
-    <el-form-item label="开设院校" :label-width="formLabelWidth">
-      <el-select v-model="form.dpt" placeholder="请选择">
-      <el-option v-for="item in deptOptions" :key="item.id" :label="item.name" :value="item.id">
-          </el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item label="课程类别" :label-width="formLabelWidth">
+    </el-form-item></el-col>
+    <el-col :span="8"><el-form-item label="课程类别" :label-width="formLabelWidth">
       <el-select v-model="form.type" placeholder="请选择">
         <el-option value="专业必修"></el-option>
         <el-option value="专业选修"></el-option>
         <el-option value="通识必修"></el-option>
         <el-option value="通识选修"></el-option>
       </el-select>
+    </el-form-item></el-col>
     </el-form-item>
     <el-form-item>
-      <el-col :span="12">
-        <el-form-item label="学时" :label-width="formLabelWidth">
-          <el-input v-model="form.hours" type="number" autocomplete="off"></el-input>
+      <el-col :span="8">
+       <el-form-item label="学院" :label-width="formLabelWidth">
+          <el-select v-model="form.department" placeholder="请选择">
+           
+           <el-option value="软件学院"></el-option>
+           <el-option value="数学学院"></el-option>
+           
+         </el-select>
+        </el-form-item>
+    </el-col>
+    <el-col :span="8">
+            <el-form-item label="年级" :label-width="formLabelWidth">
+        <el-select
+          v-model="form.grade"
+          @change="gradeSelect"
+          placeholder="请选择"
+        >
+          <el-option
+            v-for="item in gradeOptions"
+            :key="item.grade"
+            :label="item.label"
+            :value="item.grade"
+          >
+          </el-option>
+        </el-select></el-form-item>
+      
+      </el-col>
+      <el-col :span="8">
+        <el-form-item label="人数" :label-width="formLabelWidth">
+          <el-input v-model="form.total" type="number" autocomplete="off"></el-input>
         </el-form-item>
       </el-col>
-      <el-col :span="12">
+      </el-form-item>
+
+      <el-form-item>
+      <el-col :span="8">
         <el-form-item label="学分" :label-width="formLabelWidth" >
           <el-input v-model="form.credit" type="number" autocomplete="off"></el-input>
         </el-form-item>
       </el-col>
+      <el-col :span="8">
+        <el-form-item label="学时" :label-width="formLabelWidth">
+          <el-input v-model="form.hours" type="number" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-col>
+      <el-col :span="8">
+        <el-form-item label="任课教师" :label-width="formLabelWidth">
+          <el-input v-model="form.teacherName"  autocomplete="off"></el-input>
+        </el-form-item>
+      </el-col>
+    </el-form-item>
+      <el-form-item label="上课地点" label-width="80px">
+      <el-select v-model="form.area" placeholder="请选择区域" @change="getAreaSelected" style="width:180px">
+        <el-option v-for="item in areaOptions" :key="item.area" :label="item.label" :value="item.area"></el-option>
+      </el-select>
+      <el-select v-model="form.room" placeholder="请选择教室" style="width:180px;margin-left:10px">
+        <el-option v-for  = "item in roomOptions[`${form.area}`]" :key="item.room" :label="item.label" :value="item.room"></el-option>
+      </el-select>
+    </el-form-item>
+    <el-form-item label="上课时间" label-width="80px">
+      <el-select v-model="form.week" placeholder="请选择星期" style="width:180px">
+          <el-option label="星期一" value="Mon"></el-option>
+          <el-option label="星期二" value="Tues"></el-option>
+          <el-option label="星期三" value="Wed"></el-option>
+          <el-option label="星期四" value="Thur"></el-option>
+          <el-option label="星期五" value="Fri"></el-option>
+      </el-select>
+      <el-select v-model="form.time" placeholder="请选择时间" style="width:180px;margin-left:10px">
+          <el-option label="第一节课（上午）" value="0"></el-option>
+          <el-option label="第二节课（上午）" value="1"></el-option>
+          <el-option label="第三节课（下午）" value="3"></el-option>
+          <el-option label="第四节课（下午）" value="4"></el-option>
+          <el-option label="第五节课（晚上）" value="6"></el-option>
+      </el-select>
     </el-form-item>
   </el-form>
   <div slot="footer" class="dialog-footer">
@@ -124,12 +232,20 @@
 
 <script>
 import {getCookie} from '../global/cookie'
+import areaOptions from '../global/areaOptions.js'
+import roomOptions from '../global/roomOptions.js'
+
   export default {
     data() {
       return {
         deptOptions:[],
         deptSelected: '',
+        gradeSelected:'',
+        termSelected:'',
+        areaOptions:areaOptions,
+        roomOptions:roomOptions,
         search: '',
+
 
         tableData:[],//目前前端所拥有的所有课程信息
 
@@ -138,6 +254,8 @@ import {getCookie} from '../global/cookie'
         totalCount:1,
 
         dialogFormVisible: false,
+        isOpen:false,
+        visible:'inline',
         form: {
           id:'',
           name: '',

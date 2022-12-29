@@ -1,9 +1,9 @@
 module.exports = [
   {
-    name: '个人信息',
+    name: '个人中心',
     id: '1',
     sub: [{
-      name: '个人信息',
+      name: '我的主页',
       componentName: 'Tea4_1'
     }, {
       name: '修改密码',
