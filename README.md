@@ -30,3 +30,7 @@ npm install -g cnpm --registry=https://registry.npm.taobao.org
 npm uninstall sass-loader node-sass
 npm install sass-loader@8.0.2 sass@1.26.5  --save-dev
 ```
+
+* 关于学生个人主页
+
+
