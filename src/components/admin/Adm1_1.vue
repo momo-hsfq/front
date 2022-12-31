@@ -548,7 +548,7 @@ export default {
             //返回第一页数据，和
             this.$message({
               type: 'success',
-              message: '修改成功!',
+              message: '添加成功!',
             });
             this.getTableData();
           } else {

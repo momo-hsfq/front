@@ -3,6 +3,7 @@
   </template>
 
   <script>
+  
   import ChangeEmail from '../common/ChangeEmail.vue';
   export default {
     components:{

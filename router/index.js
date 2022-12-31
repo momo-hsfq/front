@@ -15,6 +15,7 @@ import Stu4_1 from '@/components/student/Stu4_1'
 import Stu4_2 from '@/components/student/Stu4_2'
 import Stu4_3 from '@/components/student/Stu4_3'
 import Stu4_4 from '@/components/student/Stu4_4'
+import Stu5 from '@/components/student/Stu5'
 import PeerAssessment1 from '@/components/student/PeerAssessment1'
 import PeerAssessment2 from '@/components/student/PeerAssessment2'
 import SocialPractice from'@/components/student/SocialPractice'
@@ -138,6 +139,13 @@ export default new Router({
         {
           path: '/Stu3',
           component: Stu3,
+          meta: {
+            requireAuth: true
+          }
+        },
+        {
+          path: '/Stu5',
+          component: Stu5,
           meta: {
             requireAuth: true
           }

@@ -72,9 +72,68 @@
                   >
                   </el-button>
               </div>
-              
-    
-    
+              <div style="background-color: #eff1f2; padding: 5px; border-radius: 2px">
+      <el-table
+         
+      >
+              <el-table-column type="index" label="序号" width="150">
+        </el-table-column>
+        <el-table-column prop="operate" label="操作" width="400">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              plain
+              type="primary"
+              @click="handleMore(scope.$index, scope.row)"
+              >详情</el-button
+            >
+            
+            <el-button
+              size="mini"
+              plain
+              type="primary"
+              @click="handleEdit(scope.$index, scope.row)"
+              >编辑</el-button
+            >
+            <el-button
+              size="mini"
+              plain
+              type="danger"
+              @click="handleDelete(scope.$index, scope.row)"
+              >删除</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+    <el-pagination
+      background
+      layout="prev, pager, next"
+      :page-size="pageSize"
+      :total="totalCount"
+      :current-page="currentPage"
+      @current-change="handleCurrentChange"
+      style="text-align: center"
+    ></el-pagination>
+
+
+
+
+    <el-dialog
+      title="个人博客"
+      :visible.sync="dialogFormVisible"
+      :close-on-click-modal="false"
+      width="50%"
+    >
+    <div>
+    <mavon-editor v-model="content" ref="md"    style="height:300px;width: 700px;" />
+            </div>
+       <div slot="footer" class="dialog-footer">
+    <el-button @click="dialogFormVisible = false">取 消</el-button>
+    <el-button type="primary" @click="addBlogData" :style="{display: this.visible1}">提交</el-button>
+    <el-button type="primary" @click="editBlog" :style="{display: this.visible2}">修改</el-button>
+  </div>
+  </el-dialog>  
   
       </el-card>
   
@@ -156,11 +215,16 @@
     import 'quill/dist/quill.snow.css'
     import 'quill/dist/quill.bubble.css'
   import upload from '../common/Upload.vue'
+  import { mavonEditor } from 'mavon-editor'
+  import 'mavon-editor/dist/css/index.css'
+  // import Blog from '../common/Blog.vue'
   
   import { error } from 'console'
   export default {
     components:{
       'v-upload':upload,
+      // 'v-Blog':Blog
+      mavonEditor
     
       
    
@@ -183,17 +247,18 @@
           grade:'',
           class: '',
           status: '',},
-          form:{
-            date:'',
-            title:'',
-            content:'',
-          },
+          pageSize: 17,
+      currentPage: 1,
+      totalCount: 1,
+          
           tableData: [],
           dialogFormVisible: false,
           visible2: 'none',
       visible1: 'inline',
       isDisabled: false,
-      editorOption: {}
+      editorOption: {},
+      content: '',
+        html: ''
         
       }
     },
@@ -225,15 +290,61 @@
       },
 
 addStuBtn() {
-      this.form.date = '';
-      this.form.title = '';
-      this.form.content = '';
+  this.content='',
+        this.html= '',
+      
  
       this.dialogFormVisible = true;
       this.visible2 = 'none';
       this.visible1 = 'inline';
       this.isDisabled = false;
     },
+
+
+    addBlogData (markdown, render) {
+      this.html = render
+        console.log(this.content)
+        console.log(this.html)
+
+        this.$axios
+        .post('/stuBasicInfo/add', {
+          contencontent,html})
+        .then((result) => {
+          console.log(result);
+          if (result.data.code === 1) {
+            //返回第一页数据，和
+            this.$message({
+              type: 'success',
+              message: '添加成功!',
+            });
+            this.getTableData();
+          } else {
+            this.$message({
+              type: 'error',
+              message: result.data.msg,
+            });
+          }
+          this.dialogFormVisible = false;
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    },
+      
+      },
+      handleEdit(index, row) {
+      
+      this.visible1 = 'none';
+      this.visible2 = 'inline';
+      this.isDisabled = true;
+      this.dialogFormVisible = true;
+    },
+      editBlog (value, render) {
+        // render 为 markdown 解析后的结果[html]
+        this.html = render
+        console.log("markdown内容: " + markdown);
+        console.log("html内容:" + html);
+      },
     // addBlogData() {
     //   this.$axios
     //     .post('/', this.form)
@@ -327,7 +438,7 @@ addStuBtn() {
       console.log('enter3')
           this.getDataForm()
         }
-  }}
+  }
   </script>
   
   

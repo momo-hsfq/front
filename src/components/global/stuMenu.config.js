@@ -34,6 +34,9 @@ module.exports = [
     sub: [{
       name: '学期成绩',
       componentName: 'Stu2'
+    },{
+      name: 'blog',
+      componentName: 'Stu5'
     }]
   }, {
     name: '学工管理',
