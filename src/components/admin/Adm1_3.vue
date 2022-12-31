@@ -15,7 +15,7 @@
         </el-select>
     </el-col>
       <el-col :span="4">
-        <el-select v-model="gradeSelected" placeholder="请选择年级" style="width:150px" size="small">
+        <el-select v-model="gradeSelected"  @change="gradeSelect" placeholder="请选择年级" style="width:150px" size="small">
             <el-option
             v-for="item in gradeOptions"
             :key="item.grade"
@@ -24,16 +24,7 @@
             </el-option>
         </el-select>
     </el-col>
-    <el-col :span="4">
-      <el-select v-model="termSelected" placeholder="请选择学年" style="width:150px" size="small">
-        <el-option
-          v-for="item in termOptions"
-          :key="item.term"
-          :label="item.label"
-          :value="item.term">
-        </el-option>
-      </el-select>
-    </el-col>
+    
   <el-col :span="8">
     <el-input v-model="search" placeholder="请输入搜索内容"  size="small">
         <el-button slot="append" icon="el-icon-search" @click="searchOk">搜索</el-button>
@@ -61,15 +52,16 @@
     </el-table-column>
     <el-table-column prop="courseNo" label="课程编号" width="150">
     </el-table-column>
-    <el-table-column prop="name" label="课程名称" width="180">
+    <el-table-column prop="courseName" label="课程名称" width="180">
     </el-table-column>
-    <el-table-column prop="type" label="课程类别" width="150">
+    <el-table-column prop="courseType" label="课程类别" width="150">
     </el-table-column>
     <el-table-column prop="department" label="开设学院" width="200">
     </el-table-column>
-    <el-table-column prop="grade" label="开设年级" width="200">
+    
+    <el-table-column prop="term" label="开设学年" width="200">
     </el-table-column>
-    <el-table-column prop="hours" label="学时" width="100">
+    <el-table-column prop="overallHour" label="学时" width="100">
     </el-table-column>
     <el-table-column prop="credit" label="学分" width="100">
     </el-table-column>
@@ -78,12 +70,12 @@
     <el-table-column prop="area,room" label="地点" width="100">
       <template slot-scope="scope"> {{scope.row.area}}{{scope.row.room}} </template>
     </el-table-column>
-    <el-table-column prop="week,time" label="时间" width="100">
-      <template slot-scope="scope"> {{scope.row.week}}{{scope.row.time}} </template>
+    <el-table-column prop="day,time" label="时间" width="100">
+      <template slot-scope="scope"> {{scope.row.day}}{{scope.row.time}} </template>
     </el-table-column>
-    <el-table-column prop="total" label="人数" width="50">
+    <el-table-column prop="totalStu" label="人数" width="50">
     </el-table-column>
-    <el-table-column prop="operate" label="操作" width="150">
+    <el-table-column  fixed="right" prop="operate" label="操作" width="150">
       <template slot-scope="scope">
         <el-button size="mini" plain type="primary"
         @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -109,15 +101,15 @@
     <el-form-item>
       <el-col :span="8">
     <el-form-item label="课程编号" :label-width="formLabelWidth">
-      <el-input v-model="form.courseNo" autocomplete="off"></el-input>
+      <el-input v-model="form.courseNo" type="number" autocomplete="off"></el-input>
     </el-form-item>
     </el-col>
     <el-col :span="8">
     <el-form-item label="课程名称" :label-width="formLabelWidth">
-      <el-input v-model="form.name" autocomplete="off"></el-input>
+      <el-input v-model="form.courseName" autocomplete="off"></el-input>
     </el-form-item></el-col>
     <el-col :span="8"><el-form-item label="课程类别" :label-width="formLabelWidth">
-      <el-select v-model="form.type" placeholder="请选择">
+      <el-select v-model="form.courseType" placeholder="请选择">
         <el-option value="专业必修"></el-option>
         <el-option value="专业选修"></el-option>
         <el-option value="通识必修"></el-option>
@@ -154,24 +146,40 @@
       
       </el-col>
       <el-col :span="8">
-        <el-form-item label="人数" :label-width="formLabelWidth">
-          <el-input v-model="form.total" type="number" autocomplete="off"></el-input>
-        </el-form-item>
+            <el-form-item label="学年" :label-width="formLabelWidth">
+        <el-select
+          v-model="form.term"
+          placeholder="请选择"
+        >
+        <el-option
+          v-for="item in termOptions"
+          :key="item.term"
+          :label="item.label"
+          :value="item.label">
+        </el-option>
+        <!-- <el-option value="2022-2023第二学期"></el-option> -->
+        </el-select></el-form-item>
+      
       </el-col>
+      
       </el-form-item>
 
-      <el-form-item>
-      <el-col :span="8">
-        <el-form-item label="学分" :label-width="formLabelWidth" >
+      <el-form-item><el-col :span="6">
+        <el-form-item label="课程人数" :label-width="formLabelWidth">
+          <el-input v-model="form.totalStu"  autocomplete="off"></el-input>
+        </el-form-item>
+      </el-col>
+      <el-col :span="6">
+        <el-form-item label="课程学分" :label-width="formLabelWidth" >
           <el-input v-model="form.credit" type="number" autocomplete="off"></el-input>
         </el-form-item>
       </el-col>
-      <el-col :span="8">
-        <el-form-item label="学时" :label-width="formLabelWidth">
-          <el-input v-model="form.hours" type="number" autocomplete="off"></el-input>
+      <el-col :span="6">
+        <el-form-item label="课程学时" :label-width="formLabelWidth">
+          <el-input v-model="form.overallHour" type="number" autocomplete="off"></el-input>
         </el-form-item>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="6">
         <el-form-item label="任课教师" :label-width="formLabelWidth">
           <el-input v-model="form.teacherName"  autocomplete="off"></el-input>
         </el-form-item>
@@ -182,23 +190,23 @@
         <el-option v-for="item in areaOptions" :key="item.area" :label="item.label" :value="item.area"></el-option>
       </el-select>
       <el-select v-model="form.room" placeholder="请选择教室" style="width:180px;margin-left:10px">
-        <el-option v-for  = "item in roomOptions[`${form.area}`]" :key="item.room" :label="item.label" :value="item.room"></el-option>
+        <el-option v-for  = "item in roomOptions[`${form.area}`]" :key="item.room" :label="item.label" :value="item.area"></el-option>
       </el-select>
     </el-form-item>
     <el-form-item label="上课时间" label-width="80px">
-      <el-select v-model="form.week" placeholder="请选择星期" style="width:180px">
-          <el-option label="星期一" value="Mon"></el-option>
-          <el-option label="星期二" value="Tues"></el-option>
-          <el-option label="星期三" value="Wed"></el-option>
-          <el-option label="星期四" value="Thur"></el-option>
-          <el-option label="星期五" value="Fri"></el-option>
+      <el-select v-model="form.day" placeholder="请选择日期" style="width:180px">
+          <el-option value="星期一" ></el-option>
+          <el-option value="星期二" ></el-option>
+          <el-option value="星期三" ></el-option>
+          <el-option value="星期四" ></el-option>
+          <el-option value="星期五" ></el-option>
       </el-select>
       <el-select v-model="form.time" placeholder="请选择时间" style="width:180px;margin-left:10px">
-          <el-option label="第一节课（上午）" value="0"></el-option>
-          <el-option label="第二节课（上午）" value="1"></el-option>
-          <el-option label="第三节课（下午）" value="3"></el-option>
-          <el-option label="第四节课（下午）" value="4"></el-option>
-          <el-option label="第五节课（晚上）" value="6"></el-option>
+          <el-option value="第一节课（上午）" ></el-option>
+          <el-option value="第二节课（上午）" ></el-option>
+          <el-option value="第三节课（下午）" ></el-option>
+          <el-option value="第四节课（下午）" ></el-option>
+          <el-option value="第五节课（晚上）" ></el-option>
       </el-select>
     </el-form-item>
   </el-form>
@@ -241,7 +249,7 @@ import roomOptions from '../global/roomOptions.js'
         deptOptions:[],
         deptSelected: '',
         gradeSelected:'',
-        termSelected:'',
+        
         areaOptions:areaOptions,
         roomOptions:roomOptions,
         search: '',
@@ -257,12 +265,20 @@ import roomOptions from '../global/roomOptions.js'
         isOpen:false,
         visible:'inline',
         form: {
-          id:'',
-          name: '',
-          dpt:'',
-          type: '',
-          hours: '',
-          credit: '',
+          courseNo:'',
+          courseName: '',
+          department:'',
+          courseType: '',
+          grade:'',
+          term:'',
+          overallHour:'',
+          credit:'',
+          teacherName:'',
+          area:'',
+          room:'',
+          day:'',
+          time:'',
+          totalStu:'',
         },
         formLabelWidth: '80px',
         visible2:'none',
@@ -284,6 +300,45 @@ import roomOptions from '../global/roomOptions.js'
           })
         }
         return this.tableData
+      },
+      gradeOptions(){
+        let myData = new Date()
+        var year1 = myData.getFullYear()
+        let month1 = myData.getMonth()
+        var n = 4
+        var options = []
+          if(month1<8){
+            n=5
+          }
+          for(var i=0;i<n;i++){
+            options[i] = {
+              grade:year1,
+              label:year1+'级',
+              value:year1+'级'
+            }
+              year1--
+          }
+        return options
+      },
+      termOptions(){
+        let myData = new Date()
+        var year1 = myData.getFullYear()
+        let month1 = myData.getMonth()
+        var options = []
+        if(month1<8){
+          options[0] = {
+            term:year1+"2",
+            label:year1+'-'+(year1+1)+'第一学期',
+            value:year1+'-'+(year1+1)+'第一学期'
+          }
+        }else{
+          options[0] = {
+            term:(year1+1)+"1",
+            label:year1+'-'+(year1+1)+'第二学期',
+            value:year1+'-'+(year1+1)+'第二学期'
+          }
+        }
+        return options
       }
     },
     methods:{
@@ -321,20 +376,28 @@ import roomOptions from '../global/roomOptions.js'
         }
         this.getTableData()
       },
+      gradeSelect() {
+      if (this.deptSelected == '') {
+        return;
+      }
+      // console.log(this.deptSelected)
+      this.getTableData();
+    },
 
       //根据条件请求某一页数据
       getTableData(){
-        if(this.deptSelected == ""){
+        if(this.deptSelected == "" || this.gradeSelected == ''){
           return
         }
         this.$axios
-        .get('/crsAdmin/getCourseInfo', { 
-          dpt:this.deptSelected
+        .post('/course/listCourse', { 
+          dpt:this.deptSelected,
+          grade: this.gradeSelected,
         })
         .then((result)=> {
             if (result.data.code === 1) {//返回第一页数据，和
               this.totalCount = result.data.datas.length
-              this.tableData = result.data.datas
+              this.tableData = result.data.datas.course
             }else{
               alert(result.data.msg)
               return false;
@@ -346,11 +409,19 @@ import roomOptions from '../global/roomOptions.js'
       },
 
       addCrsBtn(){
-        this.form.id = ""
-        this.form.name = ""
-        this.form.dpt = ""
-        this.form.hours = ""
-        this.form.type = ""
+        this.form.courseNo = ""
+        this.form.courseName = ""
+        this.form.department = ""
+        this.form.grade=""
+        this.form.teacherName=""
+        this.form.room=""
+        this.form.area=""
+        this.form.day=""
+        this.form.time=""
+        this.form.term=""
+        this.form.totalStu=""
+        this.form.overallHour = ""
+        this.form.courseType = ""
         this.form.credit = ""
         this.dialogFormVisible = true 
         this.visible2 = 'none'
@@ -360,7 +431,7 @@ import roomOptions from '../global/roomOptions.js'
 
       addCourseData(){
         this.$axios
-        .post('/crsAdmin/addCourseData', this.form)
+        .post('/course/addCourse', this.form)
         .then((result)=> {
             if (result.data.code === 1) {
               this.$message({
@@ -382,11 +453,19 @@ import roomOptions from '../global/roomOptions.js'
       },
 
       handleEdit(index,row){
-          this.form.id = row.id
-          this.form.name = row.name
-          this.form.dpt = this.deptSelected
-          this.form.hours = row.hours
-          this.form.type = row.type
+          this.form.courseNo = row.courseNo
+          this.form.courseName = row.courseName
+          this.form.department = this.deptSelected
+          this.form.grade=this.gradeSelected
+          this.form.term= row.term
+          this.form.teacherName=this.teacherName
+          this.form.area = row.area
+          this.form.room = row.room
+          this.form.day = row.day
+          this.form.time = row.time
+          this.form.totalStu = row.totalStu
+          this.form.overallHour = row.overallHour
+          this.form.courseType = row.courseType
           this.form.credit = row.credit
           this.visible1 = 'none'
           this.visible2 = 'inline'
@@ -396,7 +475,7 @@ import roomOptions from '../global/roomOptions.js'
 
       editOk(){
         this.$axios
-        .post('/crsAdmin/editCrs', this.form)
+        .post('/course/updateCourse', this.form)
         .then((result)=> {
             if (result.data.code == 1) {//返回第一页数据，和
               this.$message({
@@ -418,14 +497,14 @@ import roomOptions from '../global/roomOptions.js'
       },
 
       handleDelete(index,row){
-        this.$confirm('确定删除'+row.name+'吗?', '提示', {
+        this.$confirm('确定删除'+row.courseName+'吗?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           this.$axios
-          .post('/crsAdmin/deleteCrs', {
-            id:row.id
+          .post('/course/deleteCourse', {
+            courseNo:row.courseNo
           })
           .then((result)=> {
             if (result.data.code === 1) {
@@ -445,6 +524,42 @@ import roomOptions from '../global/roomOptions.js'
           })
         }).catch(() => {});
       },
+      openOrClose(){
+        this.$confirm('确定'+(this.isOpen==true?"结束选课":"开启选课")+'吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$axios
+          .post('/adminArrange/arrange/openOrCloseStuSelect', {})
+          .then((result)=> {
+            if (result.data.code === 1) {
+              this.$message({
+                type: 'success',
+               message: result.data.msg
+              });
+              this.isOpen = !this.isOpen
+            }else{
+              return false;
+            }
+          })
+        }).catch(() => {});
+      },
+      loadButton(){
+        this.$axios
+        .post('/adminArrange/arrange/loadButton', {})
+        .then((result)=> {
+          if (result.data.code === 1) {
+            this.isOpen = result.data.datas.isOpen==1? true: false
+            this.visible = result.data.datas.isSuper==1? 'inline':'none'
+          }else{
+            return false;
+          }
+        })
+        .catch((error)=> {
+            alert(error)
+        })
+      },
 
       handleCurrentChange(val) {
         this.currentPage = val
@@ -458,7 +573,8 @@ import roomOptions from '../global/roomOptions.js'
       }
     },
     created(){
-      this.getDptName();
+      this.loadButton();
+    this.getTableData();
     }
   }
 </script>

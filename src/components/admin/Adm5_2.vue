@@ -525,7 +525,7 @@
       },
   
       handleDelete(index, row) {
-        this.$confirm('确定删除' + row.name + '吗?', '提示', {
+        this.$confirm('确定删除' + row.stuName + '的此条课外活动记录吗?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
@@ -535,6 +535,7 @@
             this.$axios
               .post('/extraCurricular/delete', {
                 studentNo: row.studentNo,
+                title:row.title,
               })
               .then((result) => {
                 console.log(result);

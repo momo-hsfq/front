@@ -4,10 +4,10 @@
   <label>学期：</label>
   <el-select v-model="termSelected" placeholder="请选择学期" @change="getTermSelected">
     <el-option
-      v-for="item in options"
+      v-for="item in termOptions"
       :key="item.term"
       :label="item.label"
-      :value="item.term">
+      :value="item.label">
     </el-option>
   </el-select>
   </div>
@@ -54,15 +54,49 @@
 
 <script>
 import {getCookie} from '../global/cookie'
-import termOptions from '../global/termOptions.js'
+// import termOptions from '../global/termOptions.js'
 import termTable from '../global/termTable.js'
   export default {
     data() {
       return {
         termTableData:termTable,
-        options: termOptions,
+        // options: termOptions,
         termSelected: ''
       }
+    },
+    computed:{
+      termOptions(){
+        let myData = new Date()
+        var year1 = myData.getFullYear()
+        let month1 = myData.getMonth()
+        var options = []
+        if(month1<8){
+          options[0] = {
+            term:year1+"2",
+            label:year1+'-'+(year1+1)+'第一学期',
+            value:year1+'-'+(year1+1)+'第一学期'
+          },
+          options[1]={
+            term:year1+"1",
+            label:(year1-1)+'-'+(year1)+'第二学期',
+            value:(year1-1)+'-'+(year1)+'第二学期',
+          }
+        }else{
+          options[0] = {
+            term:(year1+1)+"1",
+            label:year1+'-'+(year1+1)+'第二学期',
+            value:year1+'-'+(year1+1)+'第二学期'
+          },
+          options[1]={
+            term:(year1+1)+"2",
+            label:year1+'-'+(year1+1)+'第一学期',
+            value:year1+'-'+(year1+1)+'第一学期',
+          }
+        }
+        
+        return options
+      }
+    
     },
     methods:{
       tableRowClassName({row, rowIndex}) {

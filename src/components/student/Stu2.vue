@@ -21,12 +21,13 @@
     <el-table-column label="你的学期成绩">
     <el-table-column
       type="index"
+      label="序号"
       width="50">
     </el-table-column>
     <el-table-column
       prop="id"
       label="课程编号"
-      width="100">
+      width="200">
     </el-table-column>
     <el-table-column
       prop="type"
@@ -46,7 +47,7 @@
     <el-table-column
       prop="name"
       label="课程名"
-      width="400">
+      width="300">
     </el-table-column>
     <el-table-column
       prop="score"

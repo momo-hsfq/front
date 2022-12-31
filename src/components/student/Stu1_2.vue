@@ -3,6 +3,7 @@
 </template>
 
 <script>
+
 import RoomTable from '../common/RoomTable.vue'
 export default {
   components:{

@@ -438,7 +438,7 @@ import XLSX from 'xlsx'
         }).then(() => {
           this.$axios
           .post('/teaBasicInfo/delete', {
-            id:row.id
+            teacherNo:row.teacherNo
           })
           .then((result)=> {
             if (result.data.code === 1) {

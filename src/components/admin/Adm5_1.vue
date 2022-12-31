@@ -527,7 +527,7 @@
       },
   
       handleDelete(index, row) {
-        this.$confirm('确定删除' + row.name + '吗?', '提示', {
+        this.$confirm('确定删除' + row.stuName + '的此条社会实践记录吗?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
@@ -537,6 +537,7 @@
             this.$axios
               .post('/social_prc/delete', {
                 studentNo: row.studentNo,
+                title:row.title,
               })
               .then((result) => {
                 console.log(result);

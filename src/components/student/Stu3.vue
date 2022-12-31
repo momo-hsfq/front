@@ -10,7 +10,7 @@
     :header-cell-style="{padding:'4px'}"
     :row-style="{height:'20px'}"
     :cell-style="{padding:'2px'}">
-    <el-table-column type="index" width="50">
+    <el-table-column type="index" label="序号" width="60">
     </el-table-column>
     <el-table-column prop="courseno" label="课程编号" width="100">
     </el-table-column>
@@ -24,6 +24,9 @@
     </el-table-column>
     <el-table-column prop="area,room" label="地点" width="200">
       <template slot-scope="scope"> {{scope.row.area}}{{scope.row.room}} </template>
+    </el-table-column>
+    <el-table-column prop="day,time" label="时间" width="200">
+      <template slot-scope="scope"> {{scope.row.day}}{{scope.row.time}} </template>
     </el-table-column>
     <el-table-column prop="teacherName" label="任课教师" width="100">
     </el-table-column>
