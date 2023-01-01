@@ -55,7 +55,7 @@
   
     <el-col :span="10">
       <el-card class="box-card2">
-        
+        <v-portrait class="portrait"></v-portrait>
         
       </el-card>
   
@@ -235,6 +235,7 @@
     import 'quill/dist/quill.snow.css'
     import 'quill/dist/quill.bubble.css'
   import upload from '../common/Upload.vue'
+  import portrait from '../common/Portrait.vue'
   import { mavonEditor } from 'mavon-editor'
   import 'mavon-editor/dist/css/index.css'
   // import Blog from '../common/Blog.vue'
@@ -257,6 +258,7 @@
   export default {
     components:{
       'v-upload':upload,
+      'v-portrait':portrait,
       // 'v-Blog':Blog
       mavonEditor
     
