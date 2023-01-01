@@ -56,6 +56,7 @@
     <el-col :span="10">
       <el-card class="box-card2">
         
+        
       </el-card>
   
       <el-card class="box-card3">
