@@ -531,7 +531,7 @@ import roomOptions from '../global/roomOptions.js'
           type: 'warning'
         }).then(() => {
           this.$axios
-          .post('/adminArrange/arrange/openOrCloseStuSelect', {})
+          .post('/course/openOrCloseCourse', {})
           .then((result)=> {
             if (result.data.code === 1) {
               this.$message({
@@ -547,11 +547,11 @@ import roomOptions from '../global/roomOptions.js'
       },
       loadButton(){
         this.$axios
-        .post('/adminArrange/arrange/loadButton', {})
+        .post('/course/loadButton', {})
         .then((result)=> {
           if (result.data.code === 1) {
             this.isOpen = result.data.datas.isOpen==1? true: false
-            this.visible = result.data.datas.isSuper==1? 'inline':'none'
+            this.visible = result.data.datas.isOpen==1? 'none': 'inline'
           }else{
             return false;
           }

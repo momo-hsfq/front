@@ -56,6 +56,8 @@
   
   <script>
   import {getCookie} from '../global/cookie'
+  import marked from 'marked'
+
   export default {
       data(){
           return{

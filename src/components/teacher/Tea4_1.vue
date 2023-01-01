@@ -53,7 +53,7 @@
         <div slot="header" class="clearfix">
                 <span style="float: left"><b>学术资料</b></span>
                
-                  <el-button
+                  <!-- <el-button
                     type="primary"
                     icon="el-icon-edit"
                     size="mini"
@@ -71,7 +71,7 @@
                     @click="addStuBtn"
                     round
                   >
-                  </el-button>
+                  </el-button> -->
               </div>
               <div class="personal-relation" >
           <div class="relation-item" >研究方向:  <div style="float: right; padding-right:30px;">{{teacher.direction}}</div></div>
@@ -82,7 +82,7 @@
          <div class="personal-relation">
         <div class="relation-item" >论文著作:  <div style="float: right; padding-right:30px;">{{teacher.book}}</div></div>      
       </div>
-      <el-dialog
+      <!-- <el-dialog
       title="学术资料"
       :visible.sync="dialogFormVisible"
       :close-on-click-modal="false"
@@ -139,7 +139,7 @@
           >修改</el-button
         >
       </div>
-    </el-dialog>
+    </el-dialog> -->
         
       </el-card>
   

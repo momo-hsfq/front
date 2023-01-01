@@ -124,27 +124,38 @@ import XLSX from 'xlsx'
         var year1 = myData.getFullYear()
         let month1 = myData.getMonth()
         var options = []
-        if(month1<8){
+        if(month1==0|| month1==1 ){
           options[0] = {
-            term:year1+"2",
-            label:year1+'-'+(year1+1)+'第一学期',
-            value:year1+'-'+(year1+1)+'第一学期'
+            term:(year1-1)+"2",
+            label:(year1-1)+'-'+year1+'第一学期',
+            value:(year1-1)+'-'+year1+'第一学期',
           },
           options[1]={
-            term:year1+"1",
-            label:(year1-1)+'-'+(year1)+'第二学期',
-            value:(year1-1)+'-'+(year1)+'第二学期',
+            term:(year1-1)+"1",
+            label:(year1-1)+'-'+year1+'第二学期',
+            value:(year1-1)+'-'+year1+'第二学期',
           }
-        }else{
+        }else if(month1>=2&&month1<=7){
           options[0] = {
             term:(year1+1)+"1",
-            label:year1+'-'+(year1+1)+'第二学期',
-            value:year1+'-'+(year1+1)+'第二学期'
+            label:(year1-1)+'-'+year1+'第二学期',
+            value:(year1-1)+'-'+year1+'第二学期'
           },
           options[1]={
             term:(year1+1)+"2",
             label:year1+'-'+(year1+1)+'第一学期',
             value:year1+'-'+(year1+1)+'第一学期',
+          }
+        }else{
+          options[0] = {
+            term:(year1)+"1",
+            label:year1+'-'+(year1+1)+'第一学期',
+            value:year1+'-'+(year1+1)+'第一学期',
+          },
+          options[1]={
+            term:(year1)+"2",
+            label:year1+'-'+(year1+1)+'第二学期',
+            value:year1+'-'+(year1+1)+'第二学期',
           }
         }
         
@@ -154,12 +165,12 @@ import XLSX from 'xlsx'
     methods:{
       getTermSelected(){
         this.$axios
-        .post('/teacher/getCourse', {
+        .post('/teacher/showTeachCourse', {
             term: this.termSelected
         })
         .then((result)=> {
             if (result.data.code === 1) {
-              this.crsOptions=result.data.datas
+              this.crsOptions=result.data.datas.scoreInfo
               this.crsSelected = ''
             }
         })
@@ -177,7 +188,7 @@ import XLSX from 'xlsx'
           return
         }
         this.$axios
-        .post('/teacher/getScoreData', { //获取查询学生名单接口
+        .post('/teacher/showTeachCourse', { //获取查询学生名单接口
             id:this.crsSelected
         })
         .then((result)=> {
@@ -200,7 +211,7 @@ import XLSX from 'xlsx'
           return
         }
         this.$axios
-        .post('/teacher/postScoreList', {
+        .post('/teacher/addStudentScore', {
           scoreList:this.classListTableData
         })
         .then((result)=> {

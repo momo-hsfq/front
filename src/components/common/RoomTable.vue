@@ -12,13 +12,13 @@
     </el-option>
     </el-select>
   </el-col>
-  <el-col :span="7">
-    <label>区域：</label>
+  <!-- <el-col :span="7"> -->
+    <!-- <label>区域：</label>
     <el-select v-model="areaSelected" placeholder="请选择区域" @change="getAreaSelected" style="width:180px">
     <el-option
       v-for="item in areaOptions"
       :key="item.area"
-      :label="item.area"
+      :label="item.label"
       :value="item.area">
     </el-option>
     </el-select>
@@ -27,13 +27,13 @@
     <label>教室：</label>
     <el-select v-model="roomSelected" placeholder="请选择教室" @change="getRoomSelected" style="width:180px">
     <el-option
-      v-for="item in roomOptions"
+      v-for="item in roomOptions[`${form.area}`]"
       :key="item.room"
-      :label="item.room"
-      :value="item.room">
+      :label="item.label"
+      :value="item.area">
     </el-option>
     </el-select>
-  </el-col>
+  </el-col> -->
   <el-col :span="2">
      <el-button type="primary" @click="selectOk">查询</el-button>
   </el-col>
@@ -83,6 +83,7 @@
 // import termOptions from '../global/termOptions.js'
 import roomTable from '../global/roomTable.js'
 import areaOptions from '../global/areaOptions.js'
+import roomOptions from '../global/roomOptions.js'
 import qs from 'qs'
   export default {
     data() {
@@ -90,10 +91,10 @@ import qs from 'qs'
         roomTableData:roomTable,
         // termOptions:termOptions,
         termSelected: '',
-        areaOptions:areaOptions,
-        areaSelected:'',
-        roomOptions:'',
-        roomSelected:''
+        // areaOptions:areaOptions,
+        // areaSelected:'',
+        // roomOptions:roomOptions,
+        // roomSelected:''
       }
     },
     computed:{
@@ -102,33 +103,43 @@ import qs from 'qs'
         var year1 = myData.getFullYear()
         let month1 = myData.getMonth()
         var options = []
-        if(month1<8){
+        if(month1==0|| month1==1 ){
           options[0] = {
-            term:year1+"2",
-            label:year1+'-'+(year1+1)+'第一学期',
-            value:year1+'-'+(year1+1)+'第一学期'
+            term:(year1-1)+"2",
+            label:(year1-1)+'-'+year1+'第一学期',
+            value:(year1-1)+'-'+year1+'第一学期',
           },
           options[1]={
-            term:year1+"1",
-            label:(year1-1)+'-'+(year1)+'第二学期',
-            value:(year1-1)+'-'+(year1)+'第二学期',
+            term:(year1-1)+"1",
+            label:(year1-1)+'-'+year1+'第二学期',
+            value:(year1-1)+'-'+year1+'第二学期',
           }
-        }else{
+        }else if(month1>=2&&month1<=7){
           options[0] = {
             term:(year1+1)+"1",
-            label:year1+'-'+(year1+1)+'第二学期',
-            value:year1+'-'+(year1+1)+'第二学期'
+            label:(year1-1)+'-'+year1+'第二学期',
+            value:(year1-1)+'-'+year1+'第二学期'
           },
           options[1]={
             term:(year1+1)+"2",
             label:year1+'-'+(year1+1)+'第一学期',
             value:year1+'-'+(year1+1)+'第一学期',
           }
+        }else{
+          options[0] = {
+            term:(year1)+"1",
+            label:year1+'-'+(year1+1)+'第一学期',
+            value:year1+'-'+(year1+1)+'第一学期',
+          },
+          options[1]={
+            term:(year1)+"2",
+            label:year1+'-'+(year1+1)+'第二学期',
+            value:year1+'-'+(year1+1)+'第二学期',
+          }
         }
         
         return options
       }
-    
     },
     methods:{
       tableRowClassName({row, rowIndex}) {
@@ -137,19 +148,20 @@ import qs from 'qs'
         }
         return '';
       },
-      getAreaSelected(){
-        this.$axios
-        .get('/spot/getRoomByArea', { 
-          area:this.areaSelected
-        })
-        .then((result)=> {
-          this.roomSelected = ""
-          this.roomOptions = result.data.datas
-        })
-        .catch((error)=> {
-            alert(error)
-        })
-      },
+      // getAreaSelected(){
+      //   this.$axios
+      //   .get('/spot/getRoomByArea', { 
+      //     area:this.areaSelected
+      //   })
+      //   .then((result)=> {
+      //     this.roomSelected = ""
+      //     this.roomOptions = result.data.datas
+      //   })
+      //   .catch((error)=> {
+      //       alert(error)
+      //   })
+      // },
+      
       selectOk(){
         if(this.termSelected==''||this.areaSelected==''||this.roomSelected==''){
           alert("请检查查询条件")

@@ -78,6 +78,8 @@
       >
               <el-table-column type="index" label="序号" width="150">
         </el-table-column>
+        <el-table-column type="createTime" label="日期" width="150">
+        </el-table-column>
         <el-table-column prop="operate" label="操作" width="400">
           <template slot-scope="scope">
             <el-button
@@ -308,7 +310,8 @@ addStuBtn() {
 
         this.$axios
         .post('/stuBasicInfo/add', {
-          contencontent,html})
+          content:this.content,
+          html:this.html})
         .then((result) => {
           console.log(result);
           if (result.data.code === 1) {
