@@ -104,6 +104,13 @@ export default {
         callback();
       }
     };
+    let validateVcode = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('验证码不能为空'));
+      } else {
+        callback();
+      }
+    };
     return {
       loginForm: {
         user: '',
@@ -114,6 +121,7 @@ export default {
       rules: {
         user: [{ validator: validateUser, trigger: 'blur' }],
         pass: [{ validator: validatePass, trigger: 'blur' }],
+        vcode: [{ validator: validateVcode, trigger: 'blur' }],
       },
       captchaUrl: 'http://localhost:3000/auth/login/yzm',
     };

@@ -122,6 +122,7 @@
 </style>
 
 <script>
+
 // import md5 from 'js-md5';
 // 引入密码强度进度条插件
 // 怎么能简写文件路径，同级并列文件
@@ -247,10 +248,10 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.userForm.pass = md5(this.userForm.pass)
-          this.userForm.checkPass = md5(this.userForm.checkPass)
+          this.userForm.pass = this.userForm.pass
+          this.userForm.checkPass = this.userForm.checkPass
           this.$axios
-            .post('/pwd/resetPwd', this.userForm)
+            .post('/users/resetPwd', this.userForm)
             .then((result) => {
               if (result.data.code === 1) {
                 this.$message({

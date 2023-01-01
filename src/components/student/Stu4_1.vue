@@ -76,11 +76,11 @@
       <el-table
          
       >
-              <el-table-column type="index" label="序号" width="150">
+              <el-table-column type="index" label="序号" width="100">
         </el-table-column>
         <el-table-column type="createTime" label="日期" width="150">
         </el-table-column>
-        <el-table-column prop="operate" label="操作" width="400">
+        <el-table-column prop="operate" label="操作" width="300">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -127,13 +127,30 @@
       :close-on-click-modal="false"
       width="50%"
     >
+    <el-form :model="blog">
+      <el-form-item label="发布日期" :label-width="formLabelWidth">
+        <el-date-picker
+                v-model="blog.date"
+                type="date"
+                placeholder="选择日期"
+                value-format="yyyy-MM-dd"
+                style="width: 200px"
+              >
+              </el-date-picker>
+      </el-form-item>
+
+
+
     <div>
-    <mavon-editor v-model="content" ref="md"    style="height:300px;width: 700px;" />
+
+    <mavon-editor ref="md" class="md" v-model="blog.markdown" @imgAdd="imgAdd" @imgDel="imgDel" @save="saveArticle" style="height:300px;width: 700px;"/>
             </div>
+             </el-form>
        <div slot="footer" class="dialog-footer">
+      
     <el-button @click="dialogFormVisible = false">取 消</el-button>
-    <el-button type="primary" @click="addBlogData" :style="{display: this.visible1}">提交</el-button>
-    <el-button type="primary" @click="editBlog" :style="{display: this.visible2}">修改</el-button>
+    <el-button type="primary" @click="saveArticle" :style="{display: this.visible1}">提交</el-button>
+    <el-button type="primary" @click="saveArticle" :style="{display: this.visible2}">修改</el-button>
   </div>
   </el-dialog>  
   
@@ -220,6 +237,20 @@
   import { mavonEditor } from 'mavon-editor'
   import 'mavon-editor/dist/css/index.css'
   // import Blog from '../common/Blog.vue'
+  import axios from 'axios'
+  import qs from 'qs'
+  const area_axios = axios.create({
+    headers: {'Content-Type': 'application/json;charset=utf-8',},// 设置传输内容的类型和编码
+    withCredentials: true,// 指定某个请求应该发送凭据
+  })
+  const file_axios = axios.create({
+    headers: {'Content-Type': 'multipart/form-data',},// 设置传输内容的类型和编码
+    withCredentials: true,// 指定某个请求应该发送凭据
+  })
+  const area_form_axios = axios.create({
+    headers: {'Content-Type': 'application/x-www-form-urlencoded',},// 设置传输内容的类型和编码
+    withCredentials: true,// 指定某个请求应该发送凭据
+  })
   
   import { error } from 'console'
   export default {
@@ -230,6 +261,9 @@
     
       
    
+    },
+    mounted:function (){
+        getArticle()
     },
     data() {
       
@@ -258,9 +292,14 @@
           visible2: 'none',
       visible1: 'inline',
       isDisabled: false,
+      formLabelWidth: '80px',
       editorOption: {},
-      content: '',
-        html: ''
+      blog:{
+          markdown:'',
+          html:'',
+          date:'',
+        },
+        img_file: {},
         
       }
     },
@@ -303,38 +342,7 @@ addStuBtn() {
     },
 
 
-    addBlogData (markdown, render) {
-      this.html = render
-        console.log(this.content)
-        console.log(this.html)
-
-        this.$axios
-        .post('/stuBasicInfo/add', {
-          content:this.content,
-          html:this.html})
-        .then((result) => {
-          console.log(result);
-          if (result.data.code === 1) {
-            //返回第一页数据，和
-            this.$message({
-              type: 'success',
-              message: '添加成功!',
-            });
-            this.getTableData();
-          } else {
-            this.$message({
-              type: 'error',
-              message: result.data.msg,
-            });
-          }
-          this.dialogFormVisible = false;
-        })
-        .catch((error) => {
-          alert(error);
-        });
-    },
-      
-      },
+    
       handleEdit(index, row) {
       
       this.visible1 = 'none';
@@ -348,6 +356,103 @@ addStuBtn() {
         console.log("markdown内容: " + markdown);
         console.log("html内容:" + html);
       },
+     // 获取文章
+		getArticle(){
+			area_form_axios.get('/api/get',{
+	            params:{id: 12 }
+	          },)
+	        .then(response => {
+	          console.log(this.sqlData)
+	          this.sqlData = response.data
+	        })
+	        .catch(err => {
+	          alert("请求失败")
+	        })
+		},
+      // 保存文章
+      saveArticle(){
+        var htmlCode = this.$refs.md.d_render;
+        var markdownCode = this.$refs.md.d_value;
+        if(htmlCode.length == 0 || markdownCode.length == 0){
+          alert("请填写")
+          return;
+        }
+        area_axios({
+          url: '/api/add',
+          method: 'post',
+          data: JSON.stringify({'markdown':markdownCode,'html':htmlCode}),
+        }).then((response) => {
+          if(response.data > 0){
+            alert("成功")
+          }else {
+            alert("失败")
+          }
+        })
+      },
+      // 添加图片
+      imgAdd(pos, file){
+        console.log("pos:"+pos)
+        // 第一步.将图片上传到服务器.
+        var formdata = new FormData();
+        formdata.append('pic', file);
+        file_axios({
+          url: '/api/img_upload',
+          method: 'post',
+          data: formdata,
+        }).then((response) => {
+          // 第二步.将返回的url替换到文本原位置
+          var url = response.data;
+          //通过引入对象获取: import {mavonEditor} from ... 等方式引入后，此时$vm即为mavonEditor
+          //通过$refs获取: html声明ref : <mavon-editor ref=md ></mavon-editor>， 此时$vm为 this.$refs.md`
+          this.$refs.md.$img2Url(pos, url);
+        })
+      },
+      // 删除图片
+      imgDel(pos){
+        console.log("imgDel pos:"+pos)
+      }, 
+      // 多张图片
+      mulUploadimg(){
+        // 第一步.将图片上传到服务器.
+        var formdata = new FormData();
+        for(var _img in this.img_file){
+          debugger
+          // 后台需要图片的key一致
+          formdata.append('pics', this.img_file[_img]);
+        }
+        file_axios({
+          url: '/api/mul_img_upload',
+          method: 'post',
+          data: formdata,
+        }).then((res) => {
+          /**
+           * 例如：返回数据为 res = [[pos, url], [pos, url]...]
+           * pos 为原图片标志（0）
+           * url 为上传后图片的url地址
+           */
+            // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
+          var  idx_url = res.data;
+          idx_url.forEach(item => {
+            //通过引入对象获取: import {mavonEditor} from ... 等方式引入后，此时$vm即为mavonEditor
+            //通过$refs获取: html声明ref : <mavon-editor ref=md ></mavon-editor>， 此时$vm为 this.$refs.md`
+            this.$refs.md.$img2Url(item[0], item[1]);
+          });
+        })
+      },
+      // 多张图片
+      imgDelMul(pos){
+        console.log("imgDel pos:"+pos)
+        delete this.img_file[pos];
+      },
+
+
+
+
+
+
+
+    },
+
     // addBlogData() {
     //   this.$axios
     //     .post('/', this.form)

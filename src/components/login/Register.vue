@@ -18,6 +18,12 @@
           autocomplete="off"
         ></el-input>
       </el-form-item>
+      <div class="progress-bar_wrap">
+      <password_strength
+        v-model="userForm.pass"
+        style="padding-top: 0px"
+      ></password_strength>
+    </div>
 
       <el-form-item label="确认密码" prop="checkPass" placeholder="请再次输入">
         <el-input
@@ -27,30 +33,21 @@
         ></el-input>
       </el-form-item>
 
-      <el-form-item prop="tel" label="手机号">
-        <el-input v-model="userForm.tel"> </el-input>
-      </el-form-item>
+      <el-form-item prop="email" label="邮箱">
+      <el-input
+        v-model="userForm.email"
+        autocomplete="off">
+      </el-input>
+    </el-form-item>
 
       <el-form-item>
-        <el-col :span="10">
-          <el-input
-            v-model="userForm.vcode"
-            maxlength="6"
-            placeholder="验证码"
-            style="width: 125px"
-          ></el-input>
-        </el-col>
-        <el-col :span="12">
-          <el-button
-            type="primary"
-            round
-            style="margin-left: 10px; width: 145px"
-            @click="getCode"
-            :disabled="getCodeBtnDisable"
-            >{{ codeBtnWord }}</el-button
-          >
-        </el-col>
-      </el-form-item>
+      <el-col :span="10">
+        <el-input v-model="userForm.emailCode" maxlength="6" placeholder="验证码" style="width: 125px"></el-input> 
+      </el-col>
+      <el-col :span="12">
+        <el-button type="primary" round style="margin-left:10px;width:145px" @click="getEmailCode" :disabled="getCodeBtnDisable">{{codeBtnWord}}</el-button>
+      </el-col>
+    </el-form-item>
     </el-form>
 
     <div>
@@ -96,6 +93,7 @@
 
 <script>
 import md5 from 'js-md5';
+import password_strength from './password_strength.vue';
 export default {
   data() {
     var validateUser = (rule, value, callback) => {
@@ -105,13 +103,32 @@ export default {
         callback();
       }
     };
-    var validateTel = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('手机号不能为空'));
-      } else {
-        callback();
-      }
-    };
+    var validateEmail = (rule, value, callback) => {
+          if (value === "") {
+            callback(new Error("请输入邮箱"));
+          } else {
+            if(value != ""){
+              if(!this.emailReg.test(value)){
+                callback(new Error("请输入正确的邮箱"));
+                return
+              }
+            }callback();
+          }
+        };
+        var validateEmailCode = (rule, value, callback) => {
+          if (value === "") {
+            callback(new Error("请输入验证码"));
+          } else {
+            callback();
+          }
+        };
+    // var validateTel = (rule, value, callback) => {
+    //   if (value === '') {
+    //     callback(new Error('手机号不能为空'));
+    //   } else {
+    //     callback();
+    //   }
+    // };
     // 邮箱判断是否为空
     // var validateEmail = (rule, value, callback) => {
     //   if (value === '') {
@@ -146,38 +163,47 @@ export default {
     return {
       userForm: {
         user: '',
-        tel: '',
-        // email:'',
-        vcode: '',
+        email: '',
+        emailCode: '',
         pass: '',
+        password_strength: '',
         checkPass: '',
       },
       codeBtnWord: '获取验证码',
       waitTime: 61,
       rules: {
         user: [{ validator: validateUser, trigger: 'blur' }],
-        tel: [{ validator: validateTel, trigger: 'blur' }],
+        email: [{required: false},{ validator: validateEmail, trigger: "blur" }],
+        emailCode: [{required: false},{ validator: validateEmailCode, trigger: "blur" }],
+        // tel: [{ validator: validateTel, trigger: 'blur' }],
         // 邮箱规则
         // email: [{ validator: validateEmail, trigger: 'blur'}],
-        vcode: [{ validator: validateVcode, trigger: 'blur' }],
+        // vcode: [{ validator: validateVcode, trigger: 'blur' }],
         pass: [{ validator: validatePass, trigger: 'blur' }],
         checkPass: [{ validator: validatePass2, trigger: 'blur' }],
       },
     };
   },
   computed: {
-    // 用于校验手机号码格式是否正确
-    phoneNumberStyle() {
-      let reg = /^1[3456789]\d{9}$/;
-      if (!reg.test(this.userForm.tel)) {
-        return false;
+    emailNumberStyle(){
+                let reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/
+                if(!reg.test(this.userForm.email)){
+                    return false
       }
       return true;
     },
+    // 用于校验手机号码格式是否正确
+    // phoneNumberStyle() {
+    //   let reg = /^1[3456789]\d{9}$/;
+    //   if (!reg.test(this.userForm.tel)) {
+    //     return false;
+    //   }
+    //   return true;
+    // },
     getCodeBtnDisable: {
       get() {
         if (this.waitTime == 61) {
-          if (this.phoneNumberStyle) {
+          if (this.emailNumberStyle) {
             return false;
           }
         }
@@ -186,16 +212,31 @@ export default {
       set() {},
     },
   },
+  components: {
+    password_strength: password_strength,
+  },
+  watch: {
+    $route: {
+      handler: function (route) {
+        const query = route.query;
+        if (query) {
+          this.redirect = query.redirect;
+          // this.otherQuery = this.getOtherQuery(query);
+        }
+      },
+      immediate: true,
+    },
+  },
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.userForm.pass = md5(this.userForm.pass);
-          this.userForm.checkPass = md5(this.userForm.checkPass);
+          this.userForm.pass = this.userForm.pass;
+          this.userForm.checkPass = this.userForm.checkPass;
           // 提交邮箱
           // this.userForm.email = md5(this.userForm.email)
           this.$axios
-            .post('/pwd/resetPwd', this.userForm)
+            .post('/auth/register', this.userForm)
             .then((result) => {
               if (result.data.code === 1) {
                 this.$message({
@@ -222,13 +263,12 @@ export default {
       });
     },
 
-    getCode() {
-      this.$axios
-        .post('/phone/sendCode', {
-          //获取验证码接口
-          id: this.userForm.user,
-          phoneNumber: this.userForm.tel,
-        })
+    getEmailCode(){
+          this.$axios
+            .post('/sendEmail', { //获取验证码接口
+                id:this.userForm.user,
+                email:this.userForm.email
+            })
         .then((result) => {
           if (result.data.code === 1) {
             this.$message({
@@ -247,11 +287,11 @@ export default {
         });
       let that = this;
       that.waitTime--;
-      this.codeBtnWord = `${that.waitTime} 秒后重新获取`;
+      this.codeBtnWord = `${that.waitTime}s 后重新获取`;
       let timer = setInterval(function () {
         if (that.waitTime > 1) {
           that.waitTime--;
-          that.codeBtnWord = `${that.waitTime} 秒后重新获取`;
+          that.codeBtnWord = `${that.waitTime}s 后重新获取`;
         } else {
           clearInterval(timer);
           that.codeBtnWord = '获取验证码';
