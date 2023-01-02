@@ -55,7 +55,30 @@
   
     <el-col :span="10">
       <el-card class="box-card2">
-        
+        <div slot="header" class="clearfix">
+                <span style="float: left"><b>个人画像</b></span>
+               
+                  <!-- <el-button
+                    type="primary"
+                    icon="el-icon-edit"
+                    size="mini"
+                    @click="handleEdit(scope.$index, scope.row)"
+                    style="float:right"
+                    round
+                  >
+                  
+                  </el-button>
+                  <el-button
+                    type="primary"
+                    icon="el-icon-mouse"
+                    style="float:right"
+                    size="mini"
+                    @click="addStuBtn"
+                    round
+                  >
+                  </el-button> -->
+              </div>
+        <v-portrait class="portrait"></v-portrait>
         
       </el-card>
   
@@ -234,6 +257,7 @@
     import 'quill/dist/quill.core.css'
     import 'quill/dist/quill.snow.css'
     import 'quill/dist/quill.bubble.css'
+    import portrait from '../common/Portrait.vue'
   import upload from '../common/Upload.vue'
   import { mavonEditor } from 'mavon-editor'
   import 'mavon-editor/dist/css/index.css'
@@ -258,6 +282,7 @@
     components:{
       'v-upload':upload,
       // 'v-Blog':Blog
+      'v-portrait':portrait,
       mavonEditor
     
       

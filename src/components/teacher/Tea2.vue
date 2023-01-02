@@ -163,15 +163,36 @@ import XLSX from 'xlsx'
       }
     },
     methods:{
-      getTermSelected(){
+      
+      termSelect() {
+      if (this.crsSelected == '') {
+        return;
+      }
+    
+      this.getTableData();
+    },
+    crsSelect() {
+      if (this.termSelected == '') {
+        return;
+      }
+      // console.log(this.deptSelected)
+      this.getTableData();
+    },
+    getTableData(){
+      if (this.Seltermected == '' || this.crsSelected == '') {
+        return;
+      }
         this.$axios
         .post('/teacher/showTeachCourse', {
-            term: this.termSelected
+            term: this.termSelected,
+            courseName:this.courseName,
         })
         .then((result)=> {
             if (result.data.code === 1) {
-              this.crsOptions=result.data.datas.scoreInfo
-              this.crsSelected = ''
+              // this.crsOptions=result.data.datas.scoreInfo
+              // this.crsSelected = ''
+              this.totalCount = result.data.datas.length;
+            this.classListTableData = result.data.datas.scoreInfo;
             }
         })
         .catch((error)=> {
@@ -179,28 +200,28 @@ import XLSX from 'xlsx'
         })
       },
 
-      getCrsSelected(){
-        this.selectOk()
-      },
-      selectOk(){
-        if(this.termSelected===''||this.crsSelected===''){
-          alert("请检查查询条件")
-          return
-        }
-        this.$axios
-        .post('/teacher/showTeachCourse', { //获取查询学生名单接口
-            id:this.crsSelected
-        })
-        .then((result)=> {
-            if (result.data.code === 1) {
-              this.totalCount=result.data.datas.length
-              this.classListTableData = result.data.datas
-            }
-        })
-        .catch((error)=> {
-            alert(error)
-        })
-      },
+      // getCrsSelected(){
+      //   this.selectOk()
+      // },
+      // selectOk(){
+      //   if(this.termSelected===''||this.crsSelected===''){
+      //     alert("请检查查询条件")
+      //     return
+      //   }
+      //   this.$axios
+      //   .post('/teacher/showTeachCourse', { //获取查询学生名单接口
+      //       id:this.crsSelected
+      //   })
+      //   .then((result)=> {
+      //       if (result.data.code === 1) {
+      //         this.totalCount=result.data.datas.length
+      //         this.classListTableData = result.data.datas.scoreInfo
+      //       }
+      //   })
+      //   .catch((error)=> {
+      //       alert(error)
+      //   })
+      // },
 
       postListData(){
         if(this.show==true){
