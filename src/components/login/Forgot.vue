@@ -246,10 +246,10 @@ export default {
   },
   methods: {
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.userForm.pass = this.userForm.pass
-          this.userForm.checkPass = this.userForm.checkPass
+      // this.$refs[formName].validate((valid) => {
+        // if (valid) {
+        //   this.userForm.pass = this.userForm.pass
+        //   this.userForm.checkPass = this.userForm.checkPass
           this.$axios
             .post('/users/resetPwd', this.userForm)
             .then((result) => {
@@ -270,13 +270,13 @@ export default {
             .catch((error) => {
               alert(error);
             });
-        } else {
-          this.$message({
-            type: 'error',
-            message: '请检查输入！',
-          });
-        }
-      });
+        // } else {
+        //   this.$message({
+        //     type: 'error',
+        //     message: '请检查输入！',
+        //   });
+        // }
+      // });
     },
 
     getEmailCode(){

@@ -3,6 +3,7 @@
 </template>
 
 <script>
+
 //引用echarts
 import * as echarts from "echarts"
 import axios from "axios"
@@ -48,13 +49,13 @@ export default {
                 let options={
                     animation:true,
                     animationThreshold:6,
-                    title:{
-                        text:"个人画像"
-                    },
+                    // title:{
+                    //     text:"个人画像"
+                    // },
                     radar:[{
                         shape:"circle",
                         indicator:[//雷达图的指示器，用来指定雷达图中的多个变量（维度）
-                            { name:"德育素养", max: 5 },//社会实践
+                            { name:"德育素养", max: 10 },//社会实践
                             { name:"文体素养", max: 5 },//课外活动
                             { name:"科创素养", max: 5 },//成果奖励
                             { name:"魅力值", max: 5 },
@@ -90,5 +91,6 @@ export default {
 #myChart{
     width: 300px;
     height: 300px;
+    
 }
 </style>

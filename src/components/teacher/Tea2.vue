@@ -3,7 +3,7 @@
   <el-row type="flex" class="row-bg" justify="space-between" style="margin-bottom:5px">
   <el-col :span="7">
     <label>学期：</label>
-    <el-select v-model="termSelected" placeholder="请选择学期" @change="getTermSelected" style="width:180px" size="small">
+    <el-select v-model="termSelected" placeholder="请选择学期" clearable @clear="load" @change="getTermSelected" style="width:180px" size="small">
     <el-option
       v-for="item in termOptions"
       :key="item.term"
@@ -17,9 +17,9 @@
     <el-select v-model="crsSelected" placeholder="请选择课程" @change="getCrsSelected" style="width:180px" size="small">
     <el-option
       v-for="item in crsOptions"
-      :key="item.id"
-      :label="item.name"
-      :value="item.id">
+      :key="item.courseNo"
+      :label="item.courseName"
+      :value="item.courseName">
     </el-option>
     </el-select>
   </el-col>
@@ -51,11 +51,11 @@
     :cell-style="{padding:'2px'}">
     <el-table-column type="index" label="序号" width="59">
     </el-table-column>
-    <el-table-column prop="stuId" label="学号" width="200">
+    <el-table-column prop="studentNo" label="学号" width="200">
     </el-table-column>
-    <el-table-column prop="classAndGrade" label="班级" width="150">
+    <el-table-column prop="class" label="班级" width="150">
     </el-table-column>
-    <el-table-column prop="stuName" label="姓名" width="300">
+    <el-table-column prop="name" label="姓名" width="300">
     </el-table-column>
     <el-table-column prop="score" label="成绩" width="200">
       <template slot-scope="scope">
@@ -94,10 +94,15 @@ import XLSX from 'xlsx'
       return {
         // termOptions:termOptions,
         termSelected: '',
-        crsOptions:'',
+        crsOptions:[],
         crsSelected:'',
 
         classListTableData:[],
+        studentNo:'',
+        class:'',
+        name:'',
+        score:'',
+        tag:'',
         search: '',
         show: false,
 
@@ -163,77 +168,74 @@ import XLSX from 'xlsx'
       }
     },
     methods:{
-      
-      termSelect() {
-      if (this.crsSelected == '') {
-        return;
-      }
-    
-      this.getTableData();
-    },
-    crsSelect() {
-      if (this.termSelected == '') {
-        return;
-      }
-      // console.log(this.deptSelected)
-      this.getTableData();
-    },
-    getTableData(){
-      if (this.Seltermected == '' || this.crsSelected == '') {
-        return;
-      }
+      load(){
+        location.reload()
+      },
+      getTermSelected(){
         this.$axios
-        .post('/teacher/showTeachCourse', {
-            term: this.termSelected,
-            courseName:this.courseName,
+        .post('/teacher/showCourse', {
+            term: this.termSelected
+        })
+        .then((result)=> {
+          console.log(result)
+            if (result.data.code === 1) {
+              this.crsOptions=result.data.datas
+              this.crsSelected = ''
+            }
+            
+        })
+        .catch((error)=> {
+            alert(error)
+        })
+      },
+      getCrsSelected(){
+        this.selectOk()
+      },
+      selectOk(){
+        if(this.termSelected===''||this.crsSelected===''){
+          // alert("请检查查询条件")
+          return
+        }
+        this.$axios
+        .post('/teacher/showTeachCourse', { //获取查询学生名单接口
+            courseName:this.crsSelected
         })
         .then((result)=> {
             if (result.data.code === 1) {
-              // this.crsOptions=result.data.datas.scoreInfo
-              // this.crsSelected = ''
-              this.totalCount = result.data.datas.length;
-            this.classListTableData = result.data.datas.scoreInfo;
+              console.log(result)
+             
+              const List = result.data.datas;
+List.forEach((item) => {
+  const classItem = {
+    studentNo: item.student && item.student.studentNo || '',
+    class: item.student && item.student.class || '',
+    name: item.student && item.student.name || '',
+    score: item.score || '',
+    tag: item.label || '',
+  };
+  this.classListTableData.push(classItem);
+})
             }
         })
         .catch((error)=> {
             alert(error)
         })
       },
-
-      // getCrsSelected(){
-      //   this.selectOk()
-      // },
-      // selectOk(){
-      //   if(this.termSelected===''||this.crsSelected===''){
-      //     alert("请检查查询条件")
-      //     return
-      //   }
-      //   this.$axios
-      //   .post('/teacher/showTeachCourse', { //获取查询学生名单接口
-      //       id:this.crsSelected
-      //   })
-      //   .then((result)=> {
-      //       if (result.data.code === 1) {
-      //         this.totalCount=result.data.datas.length
-      //         this.classListTableData = result.data.datas.scoreInfo
-      //       }
-      //   })
-      //   .catch((error)=> {
-      //       alert(error)
-      //   })
-      // },
-
+    
       postListData(){
         if(this.show==true){
           this.$message({
             type: 'info',
-            message: '编辑状态不能提交'
+            message: '编辑状态不能提交',
           });
           return
         }
         this.$axios
-        .post('/teacher/addStudentScore', {
-          scoreList:this.classListTableData
+        .post('/teacher/updateStudentScore', {
+          
+          courseName:this.crsSelected,
+        
+          scoreList:this.classListTableData,
         })
         .then((result)=> {
             if (result.data.code === 1) {
@@ -264,6 +266,8 @@ import XLSX from 'xlsx'
       handleCurrentChange(val) {
         this.currentPage=val
       },
-    }
+    },
+
   }
+  
 </script>

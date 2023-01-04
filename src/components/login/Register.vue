@@ -229,10 +229,10 @@ export default {
   },
   methods: {
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.userForm.pass = this.userForm.pass;
-          this.userForm.checkPass = this.userForm.checkPass;
+      // this.$refs[formName].validate((valid) => {
+        // if (valid) {
+        //   this.userForm.pass = this.userForm.pass;
+        //   this.userForm.checkPass = this.userForm.checkPass;
           // 提交邮箱
           // this.userForm.email = md5(this.userForm.email)
           this.$axios
@@ -254,13 +254,13 @@ export default {
             .catch((error) => {
               alert(error);
             });
-        } else {
-          this.$message({
-            type: 'error',
-            message: '请检查输入！',
-          });
-        }
-      });
+        // } else {
+        //   this.$message({
+        //     type: 'error',
+        //     message: '请检查输入！',
+        //   });
+        // }
+      // });
     },
 
     getEmailCode(){
@@ -302,5 +302,3 @@ export default {
   },
 };
 </script>
-
-
