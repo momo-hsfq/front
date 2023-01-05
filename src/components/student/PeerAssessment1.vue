@@ -3,12 +3,12 @@
       <div class="PeerAssessment" style="height:250">
         <div style="margin-bottom: 20px">
             <label>&nbsp;&nbsp;选择同学：</label>
-            <el-select v-model="stuSelected" placeholder="请选择你要评价的同学" @change="stuSelect">
+            <el-select v-model="stuSelected" placeholder="请选择你要评价的同学" @change="getStuSelected">
             <el-option
             v-for="item in options"
             :key="item.name"
             :label="item.name"
-            :value="item.number">
+            :value="item.name">
             </el-option>
             </el-select>
          </div>
@@ -69,10 +69,10 @@
   
     <script>
     import {getCookie} from '../global/cookie'
-    import stuOptions from '../global/stuOptions.js'
       export default {
         data() {
           return {
+            name: '',
             options:[],
             stuSelected: '',
             dynamicTags: [],
@@ -85,26 +85,29 @@
               desc: [
               { required: true, message: '请填写对同学的评价', trigger: 'blur' }
             ]
-            }
+            } 
           }
         },
         methods: {
-          getStuName() {
-      this.$axios
-        .get('/evaluate/listClass', {})
-        .then((result) => {
-          if (result.data.code === 1) {
-            console.log(result);
-            this.stuOptions = result.data.datas;
-          } else {
-            return false;
-          }
-        })
-        .catch((error) => {
-          alert(error);
-        });
-    },
-          
+          getStuData() {
+            this.$axios
+              .post('/evaluate/listClass', {})
+              .then((result) => {
+                if (result.data.code === 1) {
+                  console.log(result);
+                  this.options = result.data.datas.myClass;
+                  console.log(this.options)
+                } else {
+                  return false;
+                }
+              })
+              .catch((error) => {
+                alert(error);
+              })
+          },
+          getStuSelected(val) {
+            this.name = val
+          },
           handleClose(tag) {
             this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
           },
@@ -125,9 +128,26 @@
             this.inputValue = '';
           },
           submitForm(formName) {
-            this.$refs[formName].validate((valid) => {
+            console.log(this.dynamicTags)
+            if (!this.name) {
+              alert('请选择学生')
+              return false
+            }
+            if (this.dynamicTags.length === 0) {
+              alert('请设置标签')
+              return false
+            }
+            this.$refs[formName].validate(async (valid) => {
               if (valid) {
-                alert('submit!');
+                const obj = {
+                  evaluatedName: this.name,
+                  tag: this.dynamicTags.join(),
+                  content: this.ruleForm.desc
+                }
+                this.$axios.post('/evaluate/doEvaluate', obj).then(res => {
+                  console.log(res)
+                  this.$message.success('评价成功！')
+                })
               } else {
                 console.log('error submit!!');
                 return false;
@@ -139,7 +159,7 @@
           }
         },
         created:function(){
-          this.getStuSelected()
+          this.getStuData()
         }
       }
     </script>

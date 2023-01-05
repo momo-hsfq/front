@@ -10,13 +10,13 @@
       :header-cell-style="{padding:'4px'}"
       :row-style="{height:'20px'}"
       :cell-style="{padding:'2px'}">
-        <el-table-column
-          prop="ID"
+        <!-- <el-table-column
+          prop="studentNo"
           label="学号"
           width="180">
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
-          prop="name"
+          prop="evaluateName"
           label="姓名"
           width="180">
         </el-table-column>
@@ -26,7 +26,7 @@
           width="180">
         </el-table-column>
         <el-table-column
-          prop="assessment"
+          prop="content"
           label="Ta给你的评价">
         </el-table-column>
       </el-table>
@@ -60,7 +60,7 @@
           },
           getSelectPAData(){
             this.$axios
-            .post('/student/getStudentPeerAssessmentData', { //获取查询学生互评信息接口
+            .post('/evaluate/evaluateMe', { //获取查询学生互评信息接口
             })
             .then((result)=> {
               if (result.data.code === 1) {

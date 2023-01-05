@@ -42,6 +42,19 @@ module.exports = [
     name: '学工管理',
     id: '4',
     sub: [{
+      name: '学生互评',
+      id: '4-4',
+      sub_sub: [{
+        name: '评价中心',
+        componentName: 'PeerAssessment1'
+      }, {
+          name: '评价我的',
+          componentName: 'PeerAssessment2'
+      }, {
+          name: '我评价的',
+          componentName: 'PeerAssessment3'
+      }]
+    },{
       name: '社会实践',
       id:'4-1',
       componentName: 'SocialPractice'
@@ -53,7 +66,7 @@ module.exports = [
       name: '成果奖励',
       id:'4-3',
       componentName: 'AchievementAndAward'
-    }, {
+    }/* , {
       name: '学生互评',
       id: '4-4',
       sub_sub: [{
@@ -63,5 +76,5 @@ module.exports = [
           name: '评价我的',
           componentName: 'PeerAssessment2'
       }]
-      }]
+      } */]
   }]
