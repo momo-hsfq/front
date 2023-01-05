@@ -1,14 +1,14 @@
 <template>
     <div style="width: 1100px">
       <el-row type="flex" justify="space-between" style="margin-bottom: 5px">
-        <el-col :span="3">
+        <!-- <el-col :span="3">
           <el-select
             v-model="deptSelected"
             @change="deptSelect"
             placeholder="请选择学院"
             style="width: 150px"
             size="small"
-          >
+          > -->
             <!-- <el-option
               v-for="item in deptOptions"
               :key="item.departmentNo"
@@ -17,7 +17,7 @@
             >
             </el-option> -->
   
-            <el-option value="软件学院"></el-option>
+            <!-- <el-option value="软件学院"></el-option>
             <el-option value="数学学院"></el-option>
           </el-select>
         </el-col>
@@ -37,15 +37,15 @@
             >
             </el-option>
           </el-select>
-        </el-col>
-        <el-col :span="12">
+        </el-col> -->
+        <el-col :span="8">
           <el-input v-model="search" placeholder="请输入搜索内容" size="small">
             <el-button slot="append" icon="el-icon-search" @click="searchOk"
               >搜索</el-button
             >
           </el-input>
         </el-col>
-        <el-button
+        <!-- <el-button
           type="primary"
           size="small"
           @click="addStuBtn"
@@ -59,7 +59,7 @@
           @click="dialogUploadVisible = true"
           icon="el-icon-folder-add"
           >导入互评</el-button
-        >
+        > -->
       </el-row>
   
       <div style="background-color: #eff1f2; padding: 5px; border-radius: 2px">
@@ -91,13 +91,13 @@
           
           <el-table-column fixed="right" prop="operate" label="操作" width="150">
             <template slot-scope="scope">
-              <el-button
+              <!-- <el-button
                 size="mini"
                 plain
                 type="primary"
                 @click="handleEdit(scope.$index, scope.row)"
                 >编辑</el-button
-              >
+              > -->
               <el-button
                 size="mini"
                 plain
@@ -126,11 +126,11 @@
         :close-on-click-modal="false"
         width="50%"
       >
-        <el-form :model="form">
+        <el-form :model="form" :rules="rules"  ref="form">
           
           <el-form-item>
             <el-col :span="10">
-              <el-form-item label="评价者" :label-width="formLabelWidth">
+              <el-form-item prop="evaluateName" label="评价者" :label-width="formLabelWidth">
                 <el-input
                   v-model="form.evaluateName"
                   autocomplete="off"
@@ -138,7 +138,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="14">
-              <el-form-item label="被评价者" :label-width="formLabelWidth">
+              <el-form-item prop="evaluatedName" label="被评价者" :label-width="formLabelWidth">
                 <el-input v-model="form.evaluatedName" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
@@ -275,6 +275,19 @@
           grade:'',
           department:'',
         },
+        rules:{
+          evaluateName: [{
+        required: true,
+        message: "评价者不能为空",
+        trigger: "blur"
+        }],
+        evaluatedName: [{
+        required: true,
+        message: "被评价者不能为空",
+        trigger: "blur"
+        }],
+
+        },
         formLabelWidth: '80px',
         visible2: 'none',
         visible1: 'inline',
@@ -338,46 +351,11 @@
         );
       },
   
-      getDptName() {
-        this.$axios
-          .get('/dpt/getDptName', {})
-          .then((result) => {
-            if (result.data.code === 1) {
-              console.log(result);
-              this.deptOptions = result.data.datas;
-              this.deptSelected = result.data.datas[0].departmentNo;
-            } else {
-              return false;
-            }
-          })
-          .catch((error) => {
-            alert(error);
-          });
-      },
-  
-      deptSelect() {
-        if (this.gradeSelected == '') {
-          return;
-        }
       
-        this.getTableData();
-      },
-      gradeSelect() {
-        if (this.deptSelected == '') {
-          return;
-        }
-        // console.log(this.deptSelected)
-        this.getTableData();
-      },
       getTableData() {
-        if (this.deptSelected == '' || this.gradeSelected == '') {
-          return;
-        }
         
         this.$axios
           .post('/evaluate/listEvaluation', {
-             dpt: this.deptSelected,
-             grade: this.gradeSelected,
           })
           
           .then((result) => {
@@ -451,46 +429,9 @@
           });
       },
   
-      handleEdit(index, row) {
-        this.form.studentNo = row.studentNo;
-        this.form.stuName = row.stuName;
-        this.form.department = row.department;
-        this.form.grade = row.grade;
-        this.form.date = row.date;
-        this.form.title = row.title;
-        this.form.result = row.result;
-        
-        this.visible1 = 'none';
-        this.visible2 = 'inline';
-        this.isDisabled = true;
-        this.dialogFormVisible = true;
-      },
-      editOk() {
-        this.$axios
-          .post('/achievement/update', this.form)
-          .then((result) => {
-            if (result.data.code === 1) {
-              //返回第一页数据，和
-              this.$message({
-                type: 'success',
-                message: '修改成功!',
-              });
-              this.getTableData();
-            } else {
-              this.$message({
-                type: 'error',
-                message: result.data.msg,
-              });
-            }
-            this.dialogFormVisible = false;
-          })
-          .catch((error) => {
-            alert(error);
-          });
-      },
-  
+      
       handleDelete(index, row) {
-        this.$confirm('确定删除' + row.name + '吗?', '提示', {
+        this.$confirm('确定删除此条互评记录吗?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
@@ -498,8 +439,8 @@
         // console.log(row.studentNo)
           .then(() => {
             this.$axios
-              .post('/achievement/delete', {
-                studentNo: row.studentNo,
+              .post('/evaluate/admDeleteEvaluate', {
+                evaluateNo:row.evaluateNo,
               })
               .then((result) => {
                 console.log(result);

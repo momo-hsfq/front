@@ -72,8 +72,10 @@
         handleAdd(index,row){
           this.$axios
           .post('/stu/selectCourse', {
-            courseNo: row.courseNo 
-              
+            courseNo: row.courseNo,
+            time: row.time,
+            day: row.day, 
+            term: row.term     
           })
           .then((result)=> {
             if(result.data.code === 1){
@@ -112,7 +114,7 @@
         getSelectCrsData(){
           this.$axios
           .post('/stu/listCourse', { //获取查询学生学期成绩接口
-  
+            
           })
           .then((result)=> {
             console.log(result)

@@ -97,15 +97,15 @@
   </el-pagination>
 
   <el-dialog title="课程开设" :visible.sync="dialogFormVisible" :close-on-click-modal="false" width="50%">
-  <el-form :model="form">
+  <el-form :model="form" :rules="rules"  ref="form">
     <el-form-item>
       <el-col :span="8">
-    <el-form-item label="课程编号" :label-width="formLabelWidth">
+    <el-form-item prop="courseNo" label="课程编号" :label-width="formLabelWidth">
       <el-input v-model="form.courseNo" type="number" autocomplete="off"></el-input>
     </el-form-item>
     </el-col>
     <el-col :span="8">
-    <el-form-item label="课程名称" :label-width="formLabelWidth">
+    <el-form-item prop="courseName" label="课程名称" :label-width="formLabelWidth">
       <el-input v-model="form.courseName" autocomplete="off"></el-input>
     </el-form-item></el-col>
     <el-col :span="8"><el-form-item label="课程类别" :label-width="formLabelWidth">
@@ -146,7 +146,7 @@
       
       </el-col>
       <el-col :span="8">
-            <el-form-item label="学年" :label-width="formLabelWidth">
+            <el-form-item label="开课学期" :label-width="formLabelWidth">
         <el-select
           v-model="form.term"
           placeholder="请选择"
@@ -180,7 +180,7 @@
         </el-form-item>
       </el-col>
       <el-col :span="6">
-        <el-form-item label="任课教师" :label-width="formLabelWidth">
+        <el-form-item  label="任课教师" :label-width="formLabelWidth">
           <el-input v-model="form.teacherName"  autocomplete="off"></el-input>
         </el-form-item>
       </el-col>
@@ -279,6 +279,22 @@ import roomOptions from '../global/roomOptions.js'
           day:'',
           time:'',
           totalStu:'',
+        },
+        rules:{
+        courseNo: [{
+        required: true,
+        message: "课程编号不能为空",
+        trigger: "blur"
+        },{
+       pattern: /^(20)(1|2)\d{4}$/ ,
+        message: "请输入正确的课程编号", 
+        trigger: 'blur' 
+    }],
+        courseName: [{
+        required: true,
+        message: "课程名称不能为空",
+        trigger: "blur"
+        }],
         },
         formLabelWidth: '80px',
         visible2:'none',
@@ -558,7 +574,8 @@ import roomOptions from '../global/roomOptions.js'
             if (result.data.code === 1) {
               this.$message({
                 type: 'success',
-               message: result.data.msg
+                // message: result.data.msg
+                message: (this.isOpen==true?"结束选课":"开启选课")+'成功'
               });
               this.isOpen = !this.isOpen
             }else{
@@ -573,7 +590,7 @@ import roomOptions from '../global/roomOptions.js'
         .then((result)=> {
           if (result.data.code === 1) {
             this.isOpen = result.data.datas.isOpen==1? true: false
-            this.visible = result.data.datas.isOpen==1? 'none': 'inline'
+            // this.visible = result.data.datas.isOpen==1? 'none': 'inline'
           }else{
             return false;
           }

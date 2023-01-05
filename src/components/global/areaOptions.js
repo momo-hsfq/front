@@ -7,6 +7,14 @@ module.exports = [{
     label:'教学楼B区',
 
 },{
+    area:'教学楼C区',
+    label:'教学楼C区',
+
+},{
+    area:'教学楼D区',
+    label:'教学楼D区',
+
+},{
     area:'第一实验楼',
     label:'第一实验楼',
 

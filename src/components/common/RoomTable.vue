@@ -1,7 +1,18 @@
 <template>
 <div style="width:1101px">
-  <el-row type="flex" class="row-bg" justify="space-between" style="margin-bottom:10px">
-  <el-col :span="7">
+  <div style="margin-bottom: 10px">
+    <label>学期：</label>
+    <el-select v-model="termSelected" placeholder="请选择学期" @change="getTermSelected">
+      <el-option
+        v-for="item in termOptions"
+        :key="item.term"
+        :label="item.label"
+        :value="item.label">
+      </el-option>
+    </el-select>
+    </div>
+  <!-- <el-row type="flex" class="row-bg" justify="space-between" style="margin-bottom:10px"> -->
+  <!-- <el-col :span="7">
     <label>学期：</label>
     <el-select v-model="termSelected" placeholder="请选择学期" @change="getTermSelected" style="width:180px">
     <el-option
@@ -11,7 +22,7 @@
       :value="item.label">
     </el-option>
     </el-select>
-  </el-col>
+  </el-col> -->
   <!-- <el-col :span="7"> -->
     <!-- <label>区域：</label>
     <el-select v-model="areaSelected" placeholder="请选择区域" @change="getAreaSelected" style="width:180px">
@@ -34,10 +45,10 @@
     </el-option>
     </el-select>
   </el-col> -->
-  <el-col :span="2">
+  <!-- <el-col :span="2">
      <el-button type="primary" @click="selectOk">查询</el-button>
-  </el-col>
-  </el-row>
+  </el-col> -->
+  <!-- </el-row> -->
   <el-table
     :data="roomTableData"
     border
@@ -162,16 +173,16 @@ import qs from 'qs'
       //   })
       // },
       
-      selectOk(){
-        if(this.termSelected==''||this.areaSelected==''||this.roomSelected==''){
-          alert("请检查查询条件")
-          return
-        }
+      getTermSelected(){
+        // if(this.termSelected==''||this.areaSelected==''||this.roomSelected==''){
+        //   alert("请检查查询条件")
+        //   return
+        // }
         this.$axios
-        .get('/spot/getRoomTable', { //获取查询教室课表接口
+        .post('/stu/getRoomTable', { //获取查询教室课表接口
             term: this.termSelected,
-            area: this.areaSelected,
-            room: this.roomSelected
+            // area: this.areaSelected,
+            // room: this.roomSelected
         })
         .then((result)=> {
             if (result.data.code === 1) {
@@ -185,24 +196,29 @@ import qs from 'qs'
               }
               var time,week,info
               for(var i = 0; i < result.data.datas.length; i++){
-                time = result.data.datas[i].time
-                week = result.data.datas[i].week
-                info = result.data.datas[i].info
+                if(result.data.datas[i].time=="第一节（08:00~09:50）")time=0
+                if(result.data.datas[i].time=="第二节（10:10~12:00）")time=1
+                if(result.data.datas[i].time=="第三节（14:00~15:50）")time=3
+                if(result.data.datas[i].time=="第四节（16:10~18:00）")time=4
+                if(result.data.datas[i].time=="第五节（19:00~20:50）")time=6
+                week = result.data.datas[i].day
+                area = result.data.datas[i].area
+                room = result.data.datas[i].room
                 switch (week) {
                   case "Mon":
-                    this.roomTableData[time].Mon = info
+                    this.roomTableData[time].Mon = area + room
                     break
                   case "Tues":
-                    this.roomTableData[time].Tues = info
+                    this.roomTableData[time].Tues = area + room
                     break
                   case "Wed":
-                    this.roomTableData[time].Wed = info
+                    this.roomTableData[time].Wed = area + room
                     break
                   case "Thur":
-                    this.roomTableData[time].Thur = info
+                    this.roomTableData[time].Thur = area + room
                     break
                   case "Fri":
-                    this.roomTableData[time].Fri = info
+                    this.roomTableData[time].Fri = area + room
                     break  
                 }
               }

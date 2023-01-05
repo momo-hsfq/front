@@ -1,8 +1,11 @@
 <template>
+  <div>
 <div style="width:1101px">
     <div style="margin-bottom: 10px">
+      <el-row type="flex" style="margin-bottom:5px">
+      <el-col :span="22">
         <label>学期：</label>
-        <el-select v-model="termSelected" clearable @clear="load"  placeholder="请选择学期" @change="getTermSelected">
+        <el-select v-model="termSelected" clearable @clear="load"   placeholder="请选择学期" @change="getTermSelected">
         <el-option
         v-for="item in termOptions"
         :key="item.term"
@@ -10,6 +13,16 @@
         :value="item.label">
         </el-option>
         </el-select>
+        </el-col>
+        <el-col :span="2">
+        <el-button
+          size="primary"
+          plain
+          type="primary"
+          @click="searchGPA"
+                    >查看绩点</el-button
+                  ></el-col>
+        </el-row>
     </div>
     <el-table
     :data="gradeTableData"
@@ -63,6 +76,35 @@
     </el-table-column>
   </el-table>
   </div>
+
+  <el-dialog
+            title="绩点查询"
+            :visible.sync="gpa_visible"
+            :close-on-click-modal="false"
+            width="30%"
+          >
+          <div >
+            <div class="relation-item">
+              绩点（GPA）:
+              <div style="float: right; padding-right: 30px">
+                {{ score.GPA }}
+              </div>
+            </div>
+            <div class="relation-item">
+              排名（RANK）:
+              <div style="float: right; padding-right: 30px">
+                {{ score.rank }}
+              </div>
+            </div>
+            </div>
+            <el-row>
+              <el-col :span="2" :offset="11">
+                <el-button @click="gpa_visible = false">返 回</el-button>
+              </el-col>
+            </el-row>
+          </el-dialog>
+  </div>
+
 </template>
 
 <script>
@@ -82,6 +124,11 @@ export default {
             overallHour:'',
             score:'',
             tag:'',
+            gpa_visible:false,
+            score:{
+              GPA:'',
+              rank:'',
+            }
         }
     },
     computed:{
@@ -168,7 +215,34 @@ export default {
         .catch((error)=> {
             alert(error)
         })
-      }
+      },
+    searchGPA(){
+      this.gpa_visible = true;
+      this.$axios
+        .post('/teacher/updateStudentScore', {
+          term: this.termSelected,
+          scoreList: this.gradeTableData
+        })
+      // console.log(this.termSelected)
+      // console.log(this.gradeTableData)
+.then((result) => {
+
+          // console.log('1')
+          // console.log(result.data.msg)
+          // console.log('2')
+          // console.log(result.data.code)
+
+          if (result.data.code === 1) {
+            console.log(result);
+            this.score = result.data.datas;
+          } else {
+            return false;
+          }
+        })
+        .catch((error) => {
+          alert(error)
+        })
+    }
     }
 }
 </script>

@@ -117,7 +117,7 @@
         },
         getTermSelected(){
           this.$axios
-          .post('/teacher/showTermSchedule', { //获取查询学期课表接口
+          .post('/stu/getTermTable', { //获取查询学期课表接口
               term: this.termSelected
           })
           .then((result)=> {
@@ -130,26 +130,33 @@
                   this.termTableData[i].Thur = ""
                   this.termTableData[i].Fri = ""
                 }
-                var time,week,info
+                var time,week,courseName,area,room
                 for(var i = 0; i < result.data.datas.length; i++){
-                  time = result.data.datas[i].time
+                  if(result.data.datas[i].time=="第一节（08:00~09:50）")time=0
+                  if(result.data.datas[i].time=="第二节（10:10~12:00）")time=1
+                  if(result.data.datas[i].time=="第三节（14:00~15:50）")time=3
+                  if(result.data.datas[i].time=="第四节（16:10~18:00）")time=4
+                  if(result.data.datas[i].time=="第五节（19:00~20:50）")time=6
                   week = result.data.datas[i].day
-                  info = result.data.datas[i].info
+                  courseName = result.data.datas[i].courseName
+                  area = result.data.datas[i].area
+                room = result.data.datas[i].room
+
                   switch (week) {
-                    case "Mon":
-                      this.termTableData[time].Mon = info
+                    case "星期一":
+                      this.termTableData[time].Mon = courseName+area+room
                       break
-                    case "Tues":
-                      this.termTableData[time].Tues = info
+                    case "星期二":
+                      this.termTableData[time].Tues = courseName+area+room
                       break
-                    case "Wed":
-                      this.termTableData[time].Wed = info
+                    case "星期三":
+                      this.termTableData[time].Wed = courseName+area+room
                       break
-                    case "Thur":
-                      this.termTableData[time].Thur = info
+                    case "星期四":
+                      this.termTableData[time].Thur = courseName+area+room
                       break
-                    case "Fri":
-                      this.termTableData[time].Fri = info
+                    case "星期五":
+                      this.termTableData[time].Fri = courseName+area+room
                       break  
                   }
                 }

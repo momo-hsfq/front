@@ -136,11 +136,11 @@
       :close-on-click-modal="false"
       width="50%"
     >
-      <el-form :model="form">
+      <el-form :model="form" :rules="rules"  ref="form">
         
         <el-form-item>
           <el-col :span="10">
-            <el-form-item label="学号" :label-width="formLabelWidth">
+            <el-form-item prop="studentNo" label="学号" :label-width="formLabelWidth">
               <el-input
                 v-model="form.studentNo"
                 autocomplete="off"
@@ -148,7 +148,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="14">
-            <el-form-item label="姓名" :label-width="formLabelWidth">
+            <el-form-item prop="name" label="姓名" :label-width="formLabelWidth">
               <el-input v-model="form.name" autocomplete="off"></el-input>
             </el-form-item>
           </el-col>
@@ -202,7 +202,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="14">
-            <el-form-item label="身份证号" :label-width="formLabelWidth">
+            <el-form-item prop="identityNum" label="身份证号" :label-width="formLabelWidth">
               <el-input
                 v-model="form.identityNum"
                 autocomplete="off"
@@ -226,7 +226,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="14">
-            <el-form-item label="电话号码" :label-width="formLabelWidth">
+            <el-form-item prop="phoneNum" label="电话号码" :label-width="formLabelWidth">
               <el-input v-model="form.phoneNum" autocomplete="off"></el-input>
             </el-form-item>
           </el-col>
@@ -342,6 +342,7 @@ import FileSaver from 'file-saver';
 import XLSX from 'xlsx';
 export default {
   data() {
+    
     return {
       deptOptions: [],
       deptSelected: '',
@@ -383,6 +384,32 @@ export default {
         class: '',
         status: '',
       },
+      rules: {
+        studentNo: [{
+        required: true,
+        message: "学号不能为空",
+        trigger: "blur"
+        },{
+       pattern:/^(20)(1|2)\d{6}$/ ,
+        message: "请输入正确的学号", 
+        trigger: 'blur' 
+    }],
+        name: [{
+        required: true,
+        message: "姓名不能为空",
+        trigger: "blur"
+        }],
+        phoneNum: [{
+        pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
+        message: "请输入正确的手机号码",
+        trigger: "blur"
+    }],
+        identityNum: [{
+        pattern: /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/,
+        message: "请输入正确的身份证号",
+        trigger: "blur"
+    }],
+      },
       formLabelWidth: '80px',
       visible2: 'none',
       visible1: 'inline',
@@ -392,8 +419,11 @@ export default {
       dialogUploadVisible: false,
       fileList: [],
     };
+   
+  
   },
   computed: {
+    
     gradeOptions() {
       let myData = new Date();
       let year1 = myData.getFullYear();

@@ -130,11 +130,11 @@
         :close-on-click-modal="false"
         width="50%"
       >
-        <el-form :model="form">
+        <el-form :model="form" :rules="rules"  ref="form">
           
           <el-form-item>
             <el-col :span="10">
-              <el-form-item label="学号" :label-width="formLabelWidth">
+              <el-form-item prop="studentNo" label="学号" :label-width="formLabelWidth">
                 <el-input
                   v-model="form.studentNo"
                   autocomplete="off"
@@ -142,7 +142,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="14">
-              <el-form-item label="姓名" :label-width="formLabelWidth">
+              <el-form-item prop="stuName" label="姓名" :label-width="formLabelWidth">
                 <el-input v-model="form.stuName" autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
@@ -295,6 +295,23 @@
           result: '',
           grade:'',
           department:'',
+        },
+        rules: {
+          studentNo: [{
+        required: true,
+        message: "学号不能为空",
+        trigger: "blur"
+        },{
+       pattern:/^(20)(1|2)\d{6}$/ ,
+        message: "请输入正确的学号", 
+        trigger: 'blur' 
+    }],
+        stuName: [{
+        required: true,
+        message: "姓名不能为空",
+        trigger: "blur"
+        }],
+
         },
         formLabelWidth: '80px',
         visible2: 'none',

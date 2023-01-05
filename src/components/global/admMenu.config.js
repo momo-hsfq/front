@@ -32,9 +32,6 @@ module.exports = [{
     sub: [{
       name: '课程开设',
       componentName: 'Adm1_3'
-    },{
-      name: '系统排课',
-      componentName: 'Adm2_1'
     }]
   }
   ,{
@@ -43,10 +40,7 @@ module.exports = [{
     sub: [{
       name: '修改密码',
       componentName: 'Adm3_1'
-    }, {
-        name: '换绑手机号',
-        componentName: 'Adm3_2'
-      }, {
+    },  {
         name: '换绑邮箱',
         componentName: 'Adm3_3'
     }]

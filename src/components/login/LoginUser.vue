@@ -15,7 +15,7 @@
         ></el-input>
       </el-form-item>
 
-      <el-form-item>
+      <el-form-item prop="vcode">
         <el-col :span="12">
           <el-input
             v-model="loginForm.vcode"
@@ -121,7 +121,12 @@ export default {
       rules: {
         user: [{ validator: validateUser, trigger: 'blur' }],
         pass: [{ validator: validatePass, trigger: 'blur' }],
-        vcode: [{ validator: validateVcode, trigger: 'blur' }],
+        vcode: [{
+        pattern: /^[a-z0-9]+$/,
+        message: "请输入正确的验证码",
+        trigger: "blur"
+    }],
+        
       },
       captchaUrl: 'http://localhost:3000/auth/login/yzm',
     };

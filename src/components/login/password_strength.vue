@@ -79,7 +79,7 @@ export default {
           this.ThreePercentage = 0;
           break;
         default:
-          this.content = '高';
+          this.content = '强';
           this.onePercentage = 100;
           this.twoPercentage = 100;
           this.ThreePercentage = 100;

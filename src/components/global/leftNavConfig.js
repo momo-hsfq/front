@@ -8,6 +8,7 @@ let navConfig = {
     'Stu4_3' : 'Stu4_3',
     'PeerAssessment1' : 'PeerAssessment1',
     'PeerAssessment2' : 'PeerAssessment2',
+    'PeerAssessment3' : 'PeerAssessment3',
     'SocialPractice' : 'SocialPractice',
     'ExtracurricularActivities' : 'ExtracurricularActivities',
     'AchievementAndAward' : 'AchievementAndAward'

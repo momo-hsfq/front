@@ -83,15 +83,15 @@
   </el-pagination>
 
   <el-dialog title="基本信息" :visible.sync="dialogFormVisible" :close-on-click-modal=false width="60%">
-  <el-form :model="form">
+  <el-form :model="form" :rules="rules"  ref="form">
     <el-form-item>
       <el-col :span="8">
-        <el-form-item label="工号" :label-width="formLabelWidth">
+        <el-form-item prop="teacherNo" label="工号" :label-width="formLabelWidth">
           <el-input v-model="form.teacherNo" autocomplete="off" :disabled="isDisabled" maxlength="9" show-word-limit></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="8">
-        <el-form-item label="姓名" :label-width="formLabelWidth" >
+        <el-form-item prop="name" label="姓名" :label-width="formLabelWidth" >
           <el-input v-model="form.name" autocomplete="off"></el-input>
         </el-form-item>
       </el-col>
@@ -112,12 +112,12 @@
         </el-form-item>
       </el-col>
       <el-col :span="8">
-        <el-form-item label="身份证号" :label-width="formLabelWidth" >
+        <el-form-item prop="idCard" label="身份证号" :label-width="formLabelWidth" >
           <el-input v-model="form.idCard" autocomplete="off"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="8">
-        <el-form-item label="电话号码" :label-width="formLabelWidth" >
+        <el-form-item prop="telephone" label="电话号码" :label-width="formLabelWidth" >
           <el-input v-model="form.telephone" autocomplete="off"></el-input>
         </el-form-item>
       </el-col>
@@ -246,6 +246,32 @@ import XLSX from 'xlsx'
           book:'',
           teaCourse:'',
         },
+        rules: {
+        teacherNo: [{
+        required: true,
+        message: "学号不能为空",
+        trigger: "blur"
+        },{
+       pattern: /^((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)\d{5}$/ ,
+        message: "请输入正确的工号", 
+        trigger: 'blur' 
+    }],
+        name: [{
+        required: true,
+        message: "姓名不能为空",
+        trigger: "blur"
+        }],
+        telephone: [{
+        pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
+        message: "请输入正确的手机号码",
+        trigger: "blur"
+    }],
+        idCard: [{
+        pattern: /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/,
+        message: "请输入正确的身份证号",
+        trigger: "blur"
+    }],
+      },
         formLabelWidth: '80px',
         visible2:'none',
         visible1:'inline',

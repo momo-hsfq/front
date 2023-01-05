@@ -1,12 +1,12 @@
 <template>
-  <v-termTable></v-termTable>
+  <v-teaTermTable></v-teaTermTable>
 </template>
 
 <script>
-import TermTable from '../common/TermTable.vue'
+import TeaTermTable from '../common/TeaTermTable.vue'
 export default {
   components:{
-    'v-termTable':TermTable
+    'v-teaTermTable':TeaTermTable
   }
 }
 </script>

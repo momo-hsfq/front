@@ -64,6 +64,7 @@ export default {
                         ],
                         //半径
                         radius:100,
+                        // center:['70%','50%'],
                     
                     }],
                     series:[{
@@ -89,7 +90,7 @@ export default {
 
 <style>
 #myChart{
-    width: 300px;
+    width: 550px;
     height: 300px;
     
 }

@@ -18,6 +18,7 @@ import Stu4_4 from '@/components/student/Stu4_4'
 import Stu5 from '@/components/student/Stu5'
 import PeerAssessment1 from '@/components/student/PeerAssessment1'
 import PeerAssessment2 from '@/components/student/PeerAssessment2'
+import PeerAssessment3 from '@/components/student/PeerAssessment3'
 import SocialPractice from'@/components/student/SocialPractice'
 import ExtracurricularActivities from'@/components/student/ExtracurricularActivities'
 import AchievementAndAward from'@/components/student/AchievementAndAward'
@@ -188,6 +189,12 @@ export default new Router({
         {
           path:'/PeerAssessment2',
           component:PeerAssessment2,
+          meta:{
+            requireAuth: true
+          }
+        },{
+          path:'/PeerAssessment3',
+          component:PeerAssessment3,
           meta:{
             requireAuth: true
           }

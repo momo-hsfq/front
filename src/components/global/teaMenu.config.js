@@ -9,9 +9,6 @@ module.exports = [
       name: '修改密码',
       componentName: 'Tea4_2'
     }, {
-        name: '换绑手机号',
-        componentName: 'Tea4_3'
-      }, {
         name: '换绑邮箱',
         componentName:'Tea4_4'
       }]},{
@@ -20,9 +17,6 @@ module.exports = [
     sub: [{
       name: '学期课表',
       componentName: 'Tea1_1'
-    }, {
-      name: '教室课表',
-      componentName: 'Tea1_2'
     }]
   }, {
     name: '教学管理',
