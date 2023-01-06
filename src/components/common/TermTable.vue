@@ -144,19 +144,19 @@
 
                   switch (week) {
                     case "星期一":
-                      this.termTableData[time].Mon = courseName+area+room
+                      this.termTableData[time].Mon = courseName+'\n'+area+room
                       break
                     case "星期二":
-                      this.termTableData[time].Tues = courseName+area+room
+                      this.termTableData[time].Tues = courseName+'\n'+area+room
                       break
                     case "星期三":
-                      this.termTableData[time].Wed = courseName+area+room
+                      this.termTableData[time].Wed = courseName+'\n'+area+room
                       break
                     case "星期四":
-                      this.termTableData[time].Thur = courseName+area+room
+                      this.termTableData[time].Thur = courseName+'\n'+area+room
                       break
                     case "星期五":
-                      this.termTableData[time].Fri = courseName+area+room
+                      this.termTableData[time].Fri = courseName+'\n'+area+room
                       break  
                   }
                 }

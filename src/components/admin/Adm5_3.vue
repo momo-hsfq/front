@@ -407,6 +407,28 @@
         // console.log(this.deptSelected)
         this.getTableData();
       },
+      getTableData1() {
+      
+        this.$axios
+          .post('/achievement/list/getInfoTable', {
+            
+          })
+          
+          .then((result) => {
+            console.log(result);
+            if (result.data.code === 1) {
+              //返回第一页数据，和
+              this.totalCount = result.data.datas.length;
+              this.tableData = result.data.datas.achieves;
+            } else {
+              alert(result.data.msg);
+              return false;
+            }
+          })
+          .catch((error) => {
+            alert(error);
+          });
+      },
       getTableData() {
         if (this.deptSelected == '' || this.gradeSelected == '') {
           return;
@@ -473,7 +495,7 @@
               //返回第一页数据，和
               this.$message({
                 type: 'success',
-                message: '修改成功!',
+                message: '添加成功!',
               });
               this.getTableData();
             } else {
@@ -579,6 +601,7 @@
       // this.gradeSelected = this.gradeOptions[2].grade;
       // this.getDptName();
       this.getTableData();
+      this.getTableData1()
     },
   };
   </script>

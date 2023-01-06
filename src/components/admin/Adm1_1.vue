@@ -424,6 +424,7 @@ export default {
   },
   computed: {
     
+    
     gradeOptions() {
       let myData = new Date();
       let year1 = myData.getFullYear();
@@ -454,6 +455,9 @@ export default {
     },
   },
   methods: {
+    load() {
+      location.reload()
+    },
     submitUpload() {
       console.log('submit');
       this.$refs.upload.submit();
@@ -506,6 +510,26 @@ export default {
       }
       // console.log(this.deptSelected)
       this.getTableData();
+    },
+    getTableData1() {
+      this.$axios
+        .post('/stuBasicInfo/getInfoTable', {
+        })
+        
+        .then((result) => {
+          console.log(result);
+          if (result.data.code === 1) {
+            //返回第一页数据，和
+            this.totalCount = result.data.datas.length;
+            this.tableData = result.data.datas.stuBasicInfo;
+          } else {
+            alert(result.data.msg);
+            return false;
+          }
+        })
+        .catch((error) => {
+          alert(error);
+        });
     },
     getTableData() {
       if (this.deptSelected == '' || this.gradeSelected == '') {
@@ -686,6 +710,7 @@ export default {
     // this.gradeSelected = this.gradeOptions[2].grade;
     // this.getDptName();
     this.getTableData();
+    this.getTableData1()
   },
 };
 </script>

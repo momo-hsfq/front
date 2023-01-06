@@ -22,12 +22,18 @@ export default {
             .then((result)=>{
                 console.log(result)
                 console.log('1111111111')
+                // this.eData[0] = 1;
+                // this.eData[1] = 1;
+                // this.eData[2] = 1;
+                // this.eData[3] = 1;
+                // this.eData[4] = 1;
+                // this.eData[5] = 1;
                 this.eData[0] = result.data.datas.socialPrc.length;
                 this.eData[1] = result.data.datas.exCurricular.length;
                 this.eData[2] = result.data.datas.achieve.length;
                 this.eData[3] = result.data.datas.evaluateMe.length;
-                this.eData[4] = 5;
-                this.eData[5] = 4;
+                this.eData[4] = result.data.datas.gpa;
+                this.eData[5] = result.data.datas.course.length;
                 console.log(this.eData),
                 console.log(this.eData[0])
                 this.updateChart()
@@ -55,12 +61,12 @@ export default {
                     radar:[{
                         shape:"circle",
                         indicator:[//雷达图的指示器，用来指定雷达图中的多个变量（维度）
-                            { name:"德育素养", max: 10 },//社会实践
-                            { name:"文体素养", max: 5 },//课外活动
-                            { name:"科创素养", max: 5 },//成果奖励
-                            { name:"魅力值", max: 5 },
-                            { name:"学习能力", max: 5 },//绩点
-                            { name:"求知欲", max: 5 },
+                            { name:"德育素养", max: 7 },//社会实践
+                            { name:"文体素养", max: 7 },//课外活动
+                            { name:"科创素养", max: 7 },//成果奖励
+                            { name:"魅力值", max: 7 }, //互评
+                            { name:"学习能力", max: 7 },//绩点
+                            { name:"求知欲", max: 7 }, //选课
                         ],
                         //半径
                         radius:100,

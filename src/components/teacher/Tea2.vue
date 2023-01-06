@@ -46,8 +46,10 @@
         </el-table-column>
         <el-table-column prop="score" label="成绩" width="200">
           <template slot-scope="scope">
-            <el-input size="mini" type="number" v-show="show" v-model="scope.row.score"  @input="tableParValueChange(scope.row)"></el-input>
+            
+            <el-input size="mini" type="number" v-show="show" v-model="scope.row.score" ></el-input>
             <span v-show="!show">{{ scope.row.score }}</span>
+          
           </template>
         </el-table-column>
         <el-table-column prop="tag" label="标签" width="170">
@@ -106,15 +108,7 @@ export default {
       }
       return this.classListTableData
     },
-    tableParValueChange(row) {
-      if (row.score === '') {
-        row.error = '成绩不能为空'
-      } else if (row.score < 0) {
-        row.error = '成绩最低为0分'
-      } else if (row.score >100) {
-        row.error = '成绩最高为100分' 
-      } 
-    },
+   
     termOptions() {
       let myData = new Date()
       var year1 = myData.getFullYear()
@@ -159,6 +153,7 @@ export default {
     }
   },
   methods: {
+    
     load() {
       location.reload()
     },
@@ -257,10 +252,11 @@ export default {
       require.ensure([], () => {
         const { export_json_to_excel } = require('../../excel/Export2Excel');
         const tHeader = ['学号', '班级', '姓名', '成绩'];
-        const filterVal = ['student.studentNo', 'student.class', 'student.name', 'score'];//属性值
+        const filterVal = ['item.studentNo', 'item.class', 'item.name', 'score'];//属性值
         const list = this.classListTableData;
         const data = this.formatJson(filterVal, list);
-        export_json_to_excel(tHeader, data, 'studentlist');
+        export_json_to_excel(tHeader, data,
+         'studentlist');
       })
     },
     formatJson(filterVal, jsonData) {

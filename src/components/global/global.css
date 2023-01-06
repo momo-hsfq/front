@@ -91,6 +91,20 @@ body .el-table th.gutter{
     padding-right: 30px;
 }
 
+.changeEmail{
+    margin:150px;
+    margin-left:250px;
+    background-color:white;
+    border: 1px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+    width: 450px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
 .login_span{
     color: rgb(69,137,148);
     font-size:22px; 

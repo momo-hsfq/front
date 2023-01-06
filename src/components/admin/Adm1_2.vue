@@ -295,6 +295,7 @@ import XLSX from 'xlsx'
       }
     },
     methods:{
+      
       submitUpload() {
         this.$refs.upload.submit();
       },
@@ -337,6 +338,25 @@ import XLSX from 'xlsx'
         this.$axios
         .post('/teaBasicInfo/getInfoTable', { 
           dpt:this.deptSelected
+        })
+        .then((result)=> {
+            if (result.data.code === 1) {//返回第一页数据，和
+              this.totalCount = result.data.datas.length
+              this.tableData = result.data.datas.teaBasicInfo
+            }else{
+              alert(result.data.msg)
+              return false;
+            }
+        })
+        .catch((error)=> {
+            alert(error)
+        })
+      },
+      getTableData1(){
+       
+        this.$axios
+        .post('/teaBasicInfo/getInfoTable', { 
+          
         })
         .then((result)=> {
             if (result.data.code === 1) {//返回第一页数据，和
@@ -498,6 +518,7 @@ import XLSX from 'xlsx'
     },
     created(){
       this.getTableData();
+      this.getTableData1()
     }
   }
 </script>

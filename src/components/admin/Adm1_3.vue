@@ -422,6 +422,29 @@ import roomOptions from '../global/roomOptions.js'
       this.getTableData();
     },
 
+    getTableData1(){
+        if(this.deptSelected == "" || this.gradeSelected == ''){
+          return
+        }
+        this.$axios
+        .post('/course/listCourse', { 
+          dpt:this.deptSelected,
+          grade: this.gradeSelected,
+        })
+        .then((result)=> {
+            if (result.data.code === 1) {//返回第一页数据，和
+              this.totalCount = result.data.datas.length
+              this.tableData = result.data.datas.course
+            }else{
+              alert(result.data.msg)
+              return false;
+            }
+        })
+        .catch((error)=> {
+            alert(error)
+        })
+      },
+
       //根据条件请求某一页数据
       getTableData(){
         if(this.deptSelected == "" || this.gradeSelected == ''){
@@ -614,6 +637,7 @@ import roomOptions from '../global/roomOptions.js'
     created(){
       this.loadButton();
     this.getTableData();
+    this.getTableData1()
     }
   }
 </script>

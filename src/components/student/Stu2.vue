@@ -69,8 +69,8 @@
       width="150">
     </el-table-column>
     <el-table-column
-      prop="tag"
-      label="标签"
+      prop="classRank"
+      label="排名"
       width="150">
     </el-table-column>
     </el-table-column>
@@ -84,24 +84,20 @@
             width="30%"
           >
           <div >
-            <div class="relation-item">
+            <div class="relation-item" >
               绩点（GPA）:
               <div style="float: right; padding-right: 30px">
-                {{ score.GPA }}
+                {{ score.gpa }}
               </div>
             </div>
-            <div class="relation-item">
+            <div class="relation-item" >
               排名（RANK）:
               <div style="float: right; padding-right: 30px">
                 {{ score.rank }}
               </div>
             </div>
             </div>
-            <el-row>
-              <el-col :span="2" :offset="11">
-                <el-button @click="gpa_visible = false">返 回</el-button>
-              </el-col>
-            </el-row>
+            
           </el-dialog>
   </div>
 
@@ -123,10 +119,10 @@ export default {
             credit:'',
             overallHour:'',
             score:'',
-            tag:'',
+            classRank:'',
             gpa_visible:false,
             score:{
-              GPA:'',
+              gpa:'',
               rank:'',
             }
         }
@@ -200,7 +196,8 @@ export default {
                      overallHour:item.course && item.course.overallHour || '',
                     
                      score: item.score || '',
-                     tag: item.label || '',
+                     classRank: item.classRank || '',
+                     
                   
                  };
                  this.gradeTableData.push(classItem);
@@ -216,10 +213,11 @@ export default {
             alert(error)
         })
       },
+      
     searchGPA(){
       this.gpa_visible = true;
       this.$axios
-        .post('/teacher/updateStudentScore', {
+        .post('/stu/getGPA', {
           term: this.termSelected,
           scoreList: this.gradeTableData
         })
@@ -234,7 +232,7 @@ export default {
 
           if (result.data.code === 1) {
             console.log(result);
-            this.score = result.data.datas;
+            this.score = result.data.datas.sco;
           } else {
             return false;
           }
@@ -243,6 +241,10 @@ export default {
           alert(error)
         })
     }
+    },
+    created(){
+      this.getTermSelected();
+      
     }
 }
 </script>

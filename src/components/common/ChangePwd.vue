@@ -8,7 +8,12 @@
        <el-form-item label="新密码：" prop="password">
         <el-input type="password" v-model="userForm.password" show-password></el-input>
       </el-form-item>
-    
+      <div class="progress-bar_wrap">
+      <password_strength
+        v-model="userForm.password"
+        style="padding-top: 0px"
+      ></password_strength>
+    </div>
       <el-form-item label="确认密码：" prop="checkPass">
         <el-input type="password" v-model="userForm.checkPass" show-password></el-input>
       </el-form-item>
@@ -23,6 +28,7 @@
     <script>
     import {getCookie} from '../global/cookie'
     import md5 from "js-md5"
+    import password_strength from '../login/password_strength.vue';
       export default {
         data() {
             var validateOldPass = (rule, value, callback) => {
@@ -52,15 +58,20 @@
             userForm: {
                 oldPass:'',
                 password:'',
-                checkPass:''
+                checkPass:'',
+                password_strength: '',
             },
+            
+           
             rules: {
                 oldPass: [{ validator: validateOldPass, trigger: 'blur' }],
                 password: [{ validator: validatePass, trigger: 'blur' }],
                 checkPass: [{ validator: validatePass2, trigger: 'blur' }]
             }
           };
-        },
+        }, components: {
+    password_strength: password_strength,
+  },
         methods: {
           submitForm(formName) {
             this.$refs[formName].validate((valid) => {

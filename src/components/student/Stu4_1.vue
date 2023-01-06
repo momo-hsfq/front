@@ -150,17 +150,17 @@
             >
               <!-- <el-table-column type="index" label="序号" width="59">
         </el-table-column> -->
-              <el-table-column prop="title" label="标题" width="150">
+              <el-table-column prop="title" label="标题" width="180">
               </el-table-column>
-              <el-table-column prop="date" label="日期" width="150">
+              <el-table-column prop="date" label="时间" width="180">
               </el-table-column>
-              <el-table-column prop="operate" label="操作" width="300">
+              <el-table-column prop="operate" label="操作" width="200">
                 <template slot-scope="scope">
                   <el-button
                     size="mini"
                     plain
                     type="primary"
-                    @click="handleMore(scope.$index, scope.row)"
+                    @click="handleEdit(scope.$index, scope.row)"
                     >详情</el-button
                   >
 
@@ -200,20 +200,20 @@
             width="50%"
           >
             <el-form :model="markdownForm" :rules="rules" label-width="80px">
-              <el-form-item label="标题" prop="title">
+              <el-form-item label="博客标题" prop="title">
                 <el-input
                   v-model="markdownForm.title"
                   style="width: 80%"
                 ></el-input>
               </el-form-item>
 
-              <el-form-item label="日期" prop="date">
+              <el-form-item label="发布时间" prop="date">
                 <el-date-picker
                   v-model="markdownForm.date"
-                  type="date"
+                  type="datetime"
                   placeholder="选择日期"
-                  value-format="yyyy-MM-dd"
-                  style="width: 200px"
+                  value-format="yyyy-MM-dd HH:mm:ss"
+                  style="width: 240px"
                 >
                 </el-date-picker>
               </el-form-item>
@@ -228,12 +228,18 @@
             <br />
             <el-row>
               <el-col :span="2" :offset="9">
-                <el-button @click="add_blog_dialog_visible = false">取 消</el-button>
+                <el-button @click="add_blog_dialog_visible = false" :style="{ display: this.visible3 }" >取 消</el-button>
               </el-col>
               <el-col :span="2" :offset="2">
-                <el-button type="primary" style="float: right" @click="save"
+                <el-button type="primary" :style="{ display: this.visible1 }" @click="save"
                   >保 存</el-button
                 >
+        <el-button
+          type="primary"
+    
+          :style="{ display: this.visible2 }" @click="edit"
+          >修改</el-button
+        >
               </el-col>
             </el-row>
           </el-dialog>
@@ -247,11 +253,11 @@
             <div ref="reportHTML" v-html="htmlText" class="web-con">
             
             </div></div>
-            <el-row>
+            <!-- <el-row>
               <el-col :span="2" :offset="11">
-                <el-button @click="detail_dialog_visible = false">返 回</el-button>
+                <el-button size="small" @click="detail_dialog_visible = false">返 回</el-button>
               </el-col>
-            </el-row>
+            </el-row> -->
           </el-dialog>
         </el-card>
       </el-col>
@@ -408,6 +414,9 @@ export default {
           preview: false, // 预览
         },
       },
+      visible2: 'none',
+      visible1: 'inline',
+      visible3: 'inline',
       // user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {}
       // userinfo: userinfo
       student: {
@@ -433,8 +442,7 @@ export default {
       tableData: [],
       add_blog_dialog_visible: false,
       detail_dialog_visible: false,
-      visible2: "none",
-      visible1: "inline",
+      
       isDisabled: false,
       formLabelWidth: "80px",
       editorOption: {},
@@ -445,6 +453,7 @@ export default {
         date: "",
         content: "",
         html: "",
+        
       },
       htmlText: "",
 
@@ -530,14 +539,26 @@ export default {
     },
 
     addStuBtn() {
-      (this.content = ""),
-        (this.html = ""),
-        (this.title = ""),
-        (this.date = ""),
-        (this.add_blog_dialog_visible = true);
+      this.markdownForm.content = '';
+      this.markdownForm.title = '';
+      this.markdownForm.date = '';
+      this.markdownForm.html = '';
+      this.add_blog_dialog_visible = true;
       this.visible2 = "none";
+      this.visible3 = "inline";
       this.visible1 = "inline";
       this.isDisabled = false;
+    },
+    handleEdit(index, row) {
+      this.markdownForm.content = row.content;
+      this.markdownForm.html = row.html;
+      this.markdownForm.title = row.title;
+      this.markdownForm.date = row.date;
+      this.visible3 = 'none';
+      this.visible1 = 'none';
+      this.visible2 = 'none';
+      this.isDisabled = true;
+      this.add_blog_dialog_visible = true;
     },
     // handleMore(index, row){
     //   this.visible1 = 'none';
@@ -586,7 +607,7 @@ export default {
         .then(() => {
           this.$axios
             .post("/blog/deleteBlog", {
-              title: row.title,
+              blogNo: row.blogNo,
             })
             .then((result) => {
               console.log(result);
@@ -659,6 +680,34 @@ export default {
         content: "",
         html: "",
       };
+    },
+
+    edit(){
+      
+      this.$axios
+        .post('/blog/updateBlog', {
+        
+        blogNo:row.blogNo,
+        markdownForm: this.markdownForm})
+        .then((result) => {
+          if (result.data.code === 1) {
+            //返回第一页数据，和
+            this.$message({
+              type: 'success',
+              message: '修改成功!',
+            });
+            this.getMarkdownFormData();
+          } else {
+            this.$message({
+              type: 'error',
+              message: "修改失败！",
+            });
+          }
+          this.add_blog_dialog_visible = false;
+        })
+        .catch((error) => {
+          alert(error);
+        });
     },
 
     //   editBlog (value, render) {

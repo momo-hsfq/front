@@ -130,7 +130,7 @@
                     this.termTableData[i].Thur = ""
                     this.termTableData[i].Fri = ""
                   }
-                  var time,week,info
+                  var time,week,courseName,area,room
                   for(var i = 0; i < result.data.datas.length; i++){
                     if(result.data.datas[i].time=="第一节（08:00~09:50）")time=0
                     if(result.data.datas[i].time=="第二节（10:10~12:00）")time=1
@@ -138,22 +138,24 @@
                     if(result.data.datas[i].time=="第四节（16:10~18:00）")time=4
                     if(result.data.datas[i].time=="第五节（19:00~20:50）")time=6
                     week = result.data.datas[i].day
-                    info = result.data.datas[i].courseName
+                    courseName = result.data.datas[i].courseName
+                    area = result.data.datas[i].area
+                room = result.data.datas[i].room
                     switch (week) {
                       case "星期一":
-                        this.termTableData[time].Mon = info
+                        this.termTableData[time].Mon = courseName+'\n'+area+room
                         break
                       case "星期二":
-                        this.termTableData[time].Tues = info
+                        this.termTableData[time].Tues = courseName+'\n'+area+room
                         break
                       case "星期三":
-                        this.termTableData[time].Wed = info
+                        this.termTableData[time].Wed = courseName+'\n'+area+room
                         break
                       case "星期四":
-                        this.termTableData[time].Thur = info
+                        this.termTableData[time].Thur = courseName+'\n'+area+room
                         break
                       case "星期五":
-                        this.termTableData[time].Fri = info
+                        this.termTableData[time].Fri = courseName+'\n'+area+room
                         break  
                     }
                   }

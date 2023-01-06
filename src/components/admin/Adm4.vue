@@ -89,6 +89,7 @@
 </template>
 
 <script>
+
 import {getCookie} from '../global/cookie'
   export default {
     data() {

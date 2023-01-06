@@ -53,17 +53,17 @@
         <div slot="header" class="clearfix">
                 <span style="float: left"><b>学术资料</b></span>
                
-                  <!-- <el-button
+                  <el-button
                     type="primary"
                     icon="el-icon-edit"
                     size="mini"
-                    @click="handleEdit(scope.$index, scope.row)"
+                    @click="handleEdit"
                     style="float:right"
                     round
                   >
                   
                   </el-button>
-                  <el-button
+                  <!-- <el-button
                     type="primary"
                     icon="el-icon-mouse"
                     style="float:right"
@@ -82,7 +82,7 @@
          <div class="personal-relation">
         <div class="relation-item" >论文著作:  <div style="float: right; padding-right:30px;">{{teacher.book}}</div></div>      
       </div>
-      <!-- <el-dialog
+      <el-dialog
       title="学术资料"
       :visible.sync="dialogFormVisible"
       :close-on-click-modal="false"
@@ -139,17 +139,16 @@
           >修改</el-button
         >
       </div>
-    </el-dialog> -->
+    </el-dialog>
+   
         
       </el-card>
   
       <el-card class="box-card3">
-        <div>
-    <el-card style="width:400px ; height: 200px;">
-      <quill-editor v-model="content" ref="myQuillEditor" style="height: 200px;" :options="editorOption">
-      </quill-editor>
-    </el-card>
-  </div>
+         <div slot="header" class="clearfix">
+                <span style="float: left" icon="el-icon-watch"><b>时钟</b></span></div>
+  
+                <v-clock style="text-align:center"></v-clock>
   
       </el-card>
   
@@ -173,19 +172,19 @@
 
   .box-card1 {
       width: 400px;
-      height: 1000px;
+      height: 750px;
       border-radius: 30px;
     }
     
   
     .box-card2 {
-      width: 450px;
-      height: 280px;
+      width: 350px;
+      height: 300px;
       border-radius: 30px;
     }
     .box-card3 {
-      width: 450px;
-      height: 300px;
+      width: 350px;
+      height:400px;
       border-radius: 30px;
     }
     .el-card{
@@ -220,21 +219,27 @@
     text-align:center;
 
   }
+
+
+ 
   
   </style>
   
   
   
   <script>
+  
   import upload from '../common/Upload.vue'
   import { quillEditor } from 'vue-quill-editor'
   import 'quill/dist/quill.core.css'
   import 'quill/dist/quill.snow.css'
   import 'quill/dist/quill.bubble.css'
+  import clock from "../common/Clock.vue";
   export default {
     components:{
     'v-upload':upload,
-    quillEditor
+    quillEditor,
+    'v-clock':clock ,
   },
     data() {
       return {
@@ -269,6 +274,9 @@
         isDisabled: false,
         editorOption: {}
       }
+    },
+    computed: {
+      
     },
     created() {
       this.load()
@@ -366,42 +374,45 @@ getStudyForm() {
     //       alert(error);
     //     });
     // },
-    // handleEdit(index) {
-    //   this.form.direction = this.direction;
-    //   this.form.course = this.course;
-    //   this.form.book = this.book;
-    //   this.visible1 = 'none';
-    //   this.visible2 = 'inline';
-    //   this.isDisabled = true;
-    //   this.dialogFormVisible = true;
-    // },
-    // editOk() {
-    //   this.$axios
-    //     .post('', this.form)
-    //     .then((result) => {
-    //       if (result.data.code === 1) {
-    //         //返回第一页数据，和
-    //         this.$message({
-    //           type: 'success',
-    //           message: '修改成功!',
-    //         });
-    //         this.getTableData();
-    //       } else {
-    //         this.$message({
-    //           type: 'error',
-    //           message: result.data.msg,
-    //         });
-    //       }
-    //       this.dialogFormVisible = false;
-    //     })
-    //     .catch((error) => {
-    //       alert(error);
-    //     });
-    // },
+    handleEdit(index) {
+      this.form.direction = this.teacher.direction;
+      this.form.teaCourse = this.teacher.teaCourse;
+      this.form.book = this.teacher.book;
+      this.visible1 = 'none';
+      this.visible2 = 'inline';
+      this.isDisabled = true;
+      this.dialogFormVisible = true;
+    },
+    editOk() {
+      this.$axios
+        .post('/teaBasicInfo/changePartInfo', this.form)
+        .then((result) => {
+          if (result.data.code === 1) {
+            //返回第一页数据，和
+            this.$message({
+              type: 'success',
+              message: '修改成功!',
+            });
+            this.getStudyForm();
+          } else {
+            this.$message({
+              type: 'error',
+              message: result.data.msg,
+            });
+          }
+          this.dialogFormVisible = false;
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    },
       handleAvatarSuccess(res) {
         // res就是文件的路径
         this.form.avatarUrl = res
-      }
+      },
+      
+
+        
     },
   //   watch: {
   //   deptSelected: function () {
@@ -419,6 +430,5 @@ getStudyForm() {
   },
   }
   </script>
-  
-  
-  
+
+
